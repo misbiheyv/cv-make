@@ -10,9 +10,10 @@ A modern resume builder application built with Next.js, TypeScript, and Tailwind
 - 📄 Pixel-perfect PDF export via Puppeteer
 - 🎨 Responsive design with Tailwind CSS
 - 🚀 **Optimized PDF generation with browser pooling**
-- 🛡️ **Rate limiting for API protection**
+- 🛡️ **Redis-based rate limiting (10 requests per 3 minutes)**
 - ⏱️ **Sub-5-second PDF generation with timeouts**
 - 📊 **Health monitoring endpoint**
+- 🐳 **Docker Compose ready for production**
 
 ## Tech Stack
 
@@ -21,6 +22,9 @@ A modern resume builder application built with Next.js, TypeScript, and Tailwind
 - **Tailwind CSS 4** - Styling
 - **Zustand** - State management with localStorage persistence
 - **Puppeteer** - PDF generation
+- **Redis** - Rate limiting and caching
+- **ioredis** - Redis client
+- **Docker** - Containerization
 - **Lucide React** - Icons
 
 ## Project Structure
@@ -67,13 +71,22 @@ This ensures pixel-perfect consistency between preview and PDF output.
 
 1. User clicks "Download PDF"
 2. Client sends resume data to `/api/pdf` endpoint
-3. **Middleware** checks rate limit (10 per 3 minutes) ← _NEW: At edge, before processing_
+3. **Middleware** checks rate limit via Redis (10 per 3 minutes)
 4. Server validates data with Zod
 5. Server uses `renderToStaticMarkup()` to convert React component to HTML
 6. **Browser pool** provides a reusable Puppeteer instance
 7. Puppeteer renders HTML and generates PDF (with timeout)
 8. PDF is sent back to client for download
 9. Browser is released back to the pool for reuse
+
+### Redis Rate Limiting
+
+- **Algorithm**: Sliding window using Redis Sorted Sets
+- **Identifier**: Client IP address (from headers)
+- **Limit**: 10 requests per 3 minutes (configurable)
+- **Strategy**: Fail-open (allows requests if Redis is down)
+- **Headers**: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
+- **Multi-server**: Shared limit across all instances
 
 ### Performance Optimizations
 
@@ -133,16 +146,43 @@ sudo apt-get update && sudo apt-get install -y \
 ### Installation
 
 ```bash
+# Install dependencies
 npm install
+
+# Start Redis (required for rate limiting)
+docker-compose up redis -d
+
+# Or use local Redis
+brew install redis  # macOS
+brew services start redis
 ```
 
 ### Development
 
 ```bash
+# Start development server
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Quick Start with Docker
+
+```bash
+# Start everything (app + Redis)
+docker-compose up
+
+# Or in background
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop
+docker-compose down
+```
+
+See [README_REDIS.md](README_REDIS.md) for detailed Redis setup guide.
 
 ### Production Build
 
@@ -151,17 +191,36 @@ npm run build
 npm start
 ```
 
-### Testing PDF Generation
+### Testing
+
+**Generate PDF:**
 
 ```bash
-# Generate a test PDF
 curl -X POST http://localhost:3000/api/pdf \
   -H "Content-Type: application/json" \
   -d @test-data.json \
   --output test-resume.pdf
+```
 
-# Check system health
+**Check system health:**
+
+```bash
 curl http://localhost:3000/api/health | jq
+```
+
+**Test rate limiting:**
+
+```bash
+# Run automated test
+./test-redis-rate-limit.sh
+
+# Or manual test (should succeed 10 times, then return 429)
+for i in {1..12}; do
+  curl -X POST http://localhost:3000/api/pdf \
+    -H "Content-Type: application/json" \
+    -d @test-data.json \
+    -w "\nStatus: %{http_code}\n"
+done
 ```
 
 ## Usage
@@ -227,10 +286,13 @@ Returns:
 
 ## Documentation
 
-- `README.md` - This file (quick start)
-- `IMPROVEMENTS.md` - Implementation details and testing
-- `MIDDLEWARE.md` - Middleware architecture and configuration
-- `PDF_GENERATION.md` - Complete architecture and deployment guide
+- `README.md` - This file (overview and quick start)
+- `README_REDIS.md` - **Redis setup and testing guide** ⭐
+- `DOCKER_SETUP.md` - **Complete Docker guide**
+- `DEPLOYMENT.md` - **Production deployment guide**
+- `IMPROVEMENTS.md` - All improvements and changes
+- `MIDDLEWARE.md` - Middleware architecture details
+- `PDF_GENERATION.md` - PDF generation system architecture
 
 ## Troubleshooting
 

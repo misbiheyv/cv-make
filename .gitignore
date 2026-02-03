@@ -12,6 +12,12 @@
 
 # testing
 /coverage
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+/__tests__/
+/e2e/
 
 # next.js
 /.next/
@@ -39,3 +45,26 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# docker
+docker-compose.override.yml
+
+# test files
+test-data.json
+test-*.json
+*.pdf
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# logs
+logs
+*.log
+
+# temporary files
+tmp/
+temp/

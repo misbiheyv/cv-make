@@ -144,6 +144,21 @@ class BrowserPool {
         '--disable-gpu',
         '--no-first-run',
         '--no-zygote',
+        '--disable-crash-reporter',
+        '--disable-breakpad',
+        '--disable-features=TranslateUI',
+        '--disable-background-networking',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding',
+        '--disable-sync',
+        '--metrics-recording-only',
+        '--mute-audio',
+        '--no-default-browser-check',
+        '--no-pings',
+        '--password-store=basic',
+        '--use-mock-keychain',
+        '--disable-extensions',
       ],
     });
 
@@ -194,9 +209,9 @@ class BrowserPool {
 
 // Singleton instance
 export const browserPool = new BrowserPool({
-  max: 5,
-  min: 5,
-  idleTimeoutMs: 30000,
+  max: Number(process.env.BROWSER_POOL_MAX || 5),
+  min: Number(process.env.BROWSER_POOL_MIN || 1),
+  idleTimeoutMs: Number(process.env.BROWSER_POOL_IDLE_TIMEOUT_MS || 60000),
 });
 
 // Initialize pool on module load
