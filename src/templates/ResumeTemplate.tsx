@@ -7,7 +7,6 @@ interface ResumeTemplateProps {
 
 export function ResumeTemplate({ data, showPlaceholders = false }: ResumeTemplateProps) {
   const { personalInfo, workExperience, education, skills, languages } = data;
-
   const contactParts = personalInfo.links.filter(Boolean);
 
   return (

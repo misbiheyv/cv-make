@@ -66,9 +66,7 @@ export const useResumeStore = create<ResumeStore>()(
         set((state) => ({
           personalInfo: {
             ...state.personalInfo,
-            links: state.personalInfo.links.map((link, i) =>
-              i === index ? value : link
-            ),
+            links: state.personalInfo.links.map((link, i) => i === index ? value : link),
           },
         })),
 
@@ -83,12 +81,14 @@ export const useResumeStore = create<ResumeStore>()(
       moveLink: (index, direction) =>
         set((state) => {
           const newIndex = direction === 'up' ? index - 1 : index + 1;
-          if (newIndex < 0 || newIndex >= state.personalInfo.links.length) return state;
-          
+
+          if (newIndex < 0 || newIndex >= state.personalInfo.links.length) {
+            return state;
+          }
+
           const newLinks = [...state.personalInfo.links];
-          [newLinks[index], newLinks[newIndex]] = 
-            [newLinks[newIndex], newLinks[index]];
-          
+          [newLinks[index], newLinks[newIndex]] = [newLinks[newIndex], newLinks[index]];
+
           return {
             personalInfo: {
               ...state.personalInfo,
@@ -116,9 +116,7 @@ export const useResumeStore = create<ResumeStore>()(
 
       updateWorkExperience: (id, data) =>
         set((state) => ({
-          workExperience: state.workExperience.map((exp) =>
-            exp.id === id ? { ...exp, ...data } : exp
-          ),
+          workExperience: state.workExperience.map((exp) => exp.id === id ? { ...exp, ...data } : exp),
         })),
 
       removeWorkExperience: (id) =>
@@ -158,14 +156,14 @@ export const useResumeStore = create<ResumeStore>()(
         set((state) => {
           const index = state.workExperience.findIndex((exp) => exp.id === id);
           if (index === -1) return state;
-          
+
           const newIndex = direction === 'up' ? index - 1 : index + 1;
           if (newIndex < 0 || newIndex >= state.workExperience.length) return state;
-          
+
           const newWorkExperience = [...state.workExperience];
-          [newWorkExperience[index], newWorkExperience[newIndex]] = 
+          [newWorkExperience[index], newWorkExperience[newIndex]] =
             [newWorkExperience[newIndex], newWorkExperience[index]];
-          
+
           return { workExperience: newWorkExperience };
         }),
 
@@ -173,14 +171,14 @@ export const useResumeStore = create<ResumeStore>()(
         set((state) => ({
           workExperience: state.workExperience.map((exp) => {
             if (exp.id !== expId) return exp;
-            
+
             const newIndex = direction === 'up' ? index - 1 : index + 1;
             if (newIndex < 0 || newIndex >= exp.bullets.length) return exp;
-            
+
             const newBullets = [...exp.bullets];
-            [newBullets[index], newBullets[newIndex]] = 
+            [newBullets[index], newBullets[newIndex]] =
               [newBullets[newIndex], newBullets[index]];
-            
+
             return { ...exp, bullets: newBullets };
           }),
         })),
@@ -218,14 +216,14 @@ export const useResumeStore = create<ResumeStore>()(
         set((state) => {
           const index = state.education.findIndex((edu) => edu.id === id);
           if (index === -1) return state;
-          
+
           const newIndex = direction === 'up' ? index - 1 : index + 1;
           if (newIndex < 0 || newIndex >= state.education.length) return state;
-          
+
           const newEducation = [...state.education];
-          [newEducation[index], newEducation[newIndex]] = 
+          [newEducation[index], newEducation[newIndex]] =
             [newEducation[newIndex], newEducation[index]];
-          
+
           return { education: newEducation };
         }),
 
@@ -244,11 +242,11 @@ export const useResumeStore = create<ResumeStore>()(
         set((state) => {
           const newIndex = direction === 'up' ? index - 1 : index + 1;
           if (newIndex < 0 || newIndex >= state.skills.length) return state;
-          
+
           const newSkills = [...state.skills];
-          [newSkills[index], newSkills[newIndex]] = 
+          [newSkills[index], newSkills[newIndex]] =
             [newSkills[newIndex], newSkills[index]];
-          
+
           return { skills: newSkills };
         }),
 
@@ -277,14 +275,14 @@ export const useResumeStore = create<ResumeStore>()(
         set((state) => {
           const index = state.languages.findIndex((lang) => lang.id === id);
           if (index === -1) return state;
-          
+
           const newIndex = direction === 'up' ? index - 1 : index + 1;
           if (newIndex < 0 || newIndex >= state.languages.length) return state;
-          
+
           const newLanguages = [...state.languages];
-          [newLanguages[index], newLanguages[newIndex]] = 
+          [newLanguages[index], newLanguages[newIndex]] =
             [newLanguages[newIndex], newLanguages[index]];
-          
+
           return { languages: newLanguages };
         }),
 

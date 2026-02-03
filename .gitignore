@@ -39,8 +39,3 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-
-# old structure
-/client
-/server
-/shared
