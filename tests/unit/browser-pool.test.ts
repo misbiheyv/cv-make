@@ -144,7 +144,7 @@ describe('BrowserPool', () => {
     });
 
     it('release prioritizes wait queue over available pool', async () => {
-      pool = new BrowserPool({ min: 1, max: 1, idleTimeoutMs: 5000 });
+      pool = new BrowserPool({ min: 1, max: 1, acquireTimeoutMs: 5000 });
       await pool.initialize();
 
       const browser1 = await pool.acquire();
@@ -186,7 +186,7 @@ describe('BrowserPool', () => {
       let idx = 0;
       mockLaunch.mockImplementation(async () => browsers[idx++] as any);
 
-      pool = new BrowserPool({ min: 1, max: 2, idleTimeoutMs: 5000 });
+      pool = new BrowserPool({ min: 1, max: 2, acquireTimeoutMs: 5000 });
       await pool.initialize();
 
       await pool.acquire();
@@ -211,7 +211,7 @@ describe('BrowserPool', () => {
     });
 
     it('wait queue timeout rejects with error', async () => {
-      pool = new BrowserPool({ min: 1, max: 1, idleTimeoutMs: 50 });
+      pool = new BrowserPool({ min: 1, max: 1, acquireTimeoutMs: 50 });
       await pool.initialize();
 
       // Acquire the only browser
@@ -299,7 +299,7 @@ describe('BrowserPool', () => {
     });
 
     it('clears wait queue on destroy', async () => {
-      pool = new BrowserPool({ min: 1, max: 1, idleTimeoutMs: 5000 });
+      pool = new BrowserPool({ min: 1, max: 1, acquireTimeoutMs: 5000 });
       await pool.initialize();
 
       await pool.acquire();

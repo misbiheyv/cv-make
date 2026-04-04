@@ -100,8 +100,8 @@ describe('Browser Pool Integration', () => {
       );
       await Promise.all(requests);
 
-      // Small delay for release to propagate
-      await new Promise((r) => setTimeout(r, 500));
+      // Delay for release to propagate
+      await new Promise((r) => setTimeout(r, 5000));
 
       const health = await getHealth();
 

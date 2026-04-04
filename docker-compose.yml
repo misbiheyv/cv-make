@@ -9,7 +9,11 @@ services:
     ports:
       - "3000:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${NGINX_CONFIG_PATH}:/etc/nginx/conf.d/default.conf:ro
+    environment:
+      - RATE_LIMIT=${RATE_LIMIT}
+      - RATE_BURST=${RATE_BURST}
+      - NGINX_ENVSUBST_VARS=RATE_LIMIT,RATE_BURST
     depends_on:
       app:
         condition: service_healthy
@@ -25,10 +29,10 @@ services:
     container_name: resume_app
     restart: unless-stopped
     environment:
-      - NODE_ENV=production
-      - BROWSER_POOL_MIN=1
-      - BROWSER_POOL_MAX=10
-      - BROWSER_POOL_IDLE_TIMEOUT_MS=60000
+      - NODE_ENV=${NODE_ENV}
+      - BROWSER_POOL_MIN=${BROWSER_POOL_MIN}
+      - BROWSER_POOL_MAX=${BROWSER_POOL_MAX}
+      - BROWSER_POOL_IDLE_TIMEOUT_MS=${BROWSER_POOL_IDLE_TIMEOUT_MS}
       - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
     networks:
       - resume_network

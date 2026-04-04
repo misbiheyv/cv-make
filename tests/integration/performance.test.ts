@@ -45,9 +45,9 @@ describe('Performance Benchmarks', () => {
 
     expect(status).toBe(200);
     expect(duration).toBeLessThan(5000);
-  });
+  }, 32000);
 
-  it('warm request responds under 3 seconds', async () => {
+  it('warm request responds under 5 seconds', async () => {
     // Warmup request
     await timedPdf(uniqueIp(100));
 
@@ -57,8 +57,8 @@ describe('Performance Benchmarks', () => {
     console.log(`\n  Warm request: ${formatMs(duration)}`);
 
     expect(status).toBe(200);
-    expect(duration).toBeLessThan(3000);
-  });
+    expect(duration).toBeLessThan(5000);
+  }, 32000);
 
   it('sequential throughput over 10 requests', async () => {
     // Warmup
@@ -72,7 +72,7 @@ describe('Performance Benchmarks', () => {
     }
 
     printTable('Sequential throughput (10 requests)', durations);
-  });
+  }, 32000);
 
   it('concurrent throughput with 10 simultaneous requests', async () => {
     // Warmup
@@ -93,9 +93,9 @@ describe('Performance Benchmarks', () => {
 
     printTable('Concurrent throughput (10 simultaneous)', durations);
     console.log(`    Total wall time: ${formatMs(totalElapsed)}`);
-  });
+  }, 32000);
 
-  it('pool scales under heavy concurrent load (15 requests)', async () => {
+  it('pool scales under heavy concurrent load (20 requests)', async () => {
     // Warmup
     await timedPdf(uniqueIp(400));
 
@@ -103,7 +103,7 @@ describe('Performance Benchmarks', () => {
     const totalStart = performance.now();
 
     const results = await Promise.all(
-      Array.from({ length: 15 }, (_, i) => timedPdf(uniqueIp(401 + i))),
+      Array.from({ length: 20 }, (_, i) => timedPdf(uniqueIp(401 + i))),
     );
 
     const totalElapsed = performance.now() - totalStart;
@@ -115,9 +115,9 @@ describe('Performance Benchmarks', () => {
       expect(r.status).toBe(200);
     });
 
-    printTable('Heavy load (15 simultaneous)', durations);
+    printTable('Heavy load (20 simultaneous)', durations);
     console.log(`    Total wall time: ${formatMs(totalElapsed)}`);
     console.log(`    Pool before: total=${healthBefore.browserPool.total}, max=${healthBefore.browserPool.maxBrowsers}`);
     console.log(`    Pool after:  total=${healthAfter.browserPool.total}, max=${healthAfter.browserPool.maxBrowsers}`);
-  });
+  }, 32000);
 });

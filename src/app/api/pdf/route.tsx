@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 
         await page.setContent(resumeHTML, {
             waitUntil: 'networkidle0',
-            timeout: PDF_GENERATION_TIMEOUT / 2
+            timeout: PDF_GENERATION_TIMEOUT
         });
 
         const pdfBuffer = await page.pdf({

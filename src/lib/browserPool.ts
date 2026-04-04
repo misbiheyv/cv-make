@@ -4,6 +4,7 @@ interface BrowserPoolOptions {
   max?: number;
   min?: number;
   idleTimeoutMs?: number;
+  acquireTimeoutMs?: number;
 }
 
 /**
@@ -17,13 +18,16 @@ export class BrowserPool {
   private maxBrowsers: number;
   private minBrowsers: number;
   private idleTimeoutMs: number;
+  private acquireTimeoutMs: number;
   private waitQueue: Array<(browser: Browser) => void> = [];
   private isInitialized = false;
+  private idleTimers = new Map<Browser, ReturnType<typeof setTimeout>>();
 
   constructor(options: BrowserPoolOptions = {}) {
     this.maxBrowsers = options.max ?? 5;
     this.minBrowsers = options.min ?? 1;
     this.idleTimeoutMs = options.idleTimeoutMs ?? 30000;
+    this.acquireTimeoutMs = options.acquireTimeoutMs ?? 60000;
   }
 
   async initialize(): Promise<void> {
@@ -62,6 +66,11 @@ export class BrowserPool {
 
     this.waitQueue = [];
 
+    for (const timer of this.idleTimers.values()) {
+      clearTimeout(timer);
+    }
+    this.idleTimers.clear();
+
     await Promise.all(
       this.browsers.map(browser =>
         browser.close().catch(err => console.error('Error closing browser:', err))
@@ -82,6 +91,7 @@ export class BrowserPool {
 
     if (this.available.length > 0) {
       const browser = this.available.pop()!;
+      this.clearIdleTimer(browser);
 
       if (browser.connected) {
         return browser;
@@ -117,6 +127,7 @@ export class BrowserPool {
     // Add back to available pool
     if (browser.connected) {
       this.available.push(browser);
+      this.startIdleTimer(browser);
     } else {
       this.removeBrowser(browser);
     }
@@ -180,7 +191,7 @@ export class BrowserPool {
         }
 
         reject(new Error('Browser acquisition timeout'));
-      }, this.idleTimeoutMs);
+      }, this.acquireTimeoutMs);
 
       const wrappedResolve = (browser: Browser) => {
         clearTimeout(timeout);
@@ -191,7 +202,38 @@ export class BrowserPool {
     });
   }
 
+  private startIdleTimer(browser: Browser): void {
+    this.clearIdleTimer(browser);
+
+    if (this.browsers.length <= this.minBrowsers) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      this.idleTimers.delete(browser);
+
+      if (this.browsers.length > this.minBrowsers && this.available.includes(browser)) {
+        console.log(`Closing idle browser (pool: ${this.browsers.length} → ${this.browsers.length - 1})`);
+        this.removeBrowser(browser);
+      }
+    }, this.idleTimeoutMs);
+
+    timer.unref?.();
+    this.idleTimers.set(browser, timer);
+  }
+
+  private clearIdleTimer(browser: Browser): void {
+    const timer = this.idleTimers.get(browser);
+
+    if (timer) {
+      clearTimeout(timer);
+      this.idleTimers.delete(browser);
+    }
+  }
+
   private removeBrowser(browser: Browser): void {
+    this.clearIdleTimer(browser);
+
     const index = this.browsers.indexOf(browser);
     const availableIndex = this.available.indexOf(browser);
 
