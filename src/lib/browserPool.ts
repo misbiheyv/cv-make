@@ -220,12 +220,12 @@ browserPool.initialize().catch(err => {
 });
 
 // Cleanup on process exit (only in Node.js runtime, not Edge Runtime)
-process?.on?.call(null, 'SIGTERM', async () => {
+process?.on?.('SIGTERM', async () => {
   await browserPool.destroy();
-  process.exit?.call(null, 0);
+  process.exit(0);
 });
 
-process?.on.call(null, 'SIGINT', async () => {
+process?.on?.('SIGINT', async () => {
   await browserPool.destroy();
-  process.exit?.call(null, 0);
+  process.exit(0);
 });
