@@ -1,6 +1,12 @@
 import puppeteer, { Browser } from 'puppeteer';
 
 import { createLogger } from '@/lib/logger';
+import {
+  browserPoolSize,
+  browserPoolQueueDepth,
+  browserPoolOperationsTotal,
+  browserPoolAcquireDuration,
+} from '@/lib/metrics';
 
 const log = createLogger('browserPool');
 
@@ -56,6 +62,7 @@ export class BrowserPool {
         })
     
         this.isInitialized = true;
+        this.updatePoolGauges();
         log.info({ totalBrowsers: this.browsers.length }, 'Browser pool initialized');
   
         resolve();
@@ -89,6 +96,8 @@ export class BrowserPool {
   }
 
   async acquire(): Promise<Browser> {
+    const endTimer = browserPoolAcquireDuration.startTimer();
+
     if (!this.isInitialized) {
       await this.initialize();
     }
@@ -98,20 +107,31 @@ export class BrowserPool {
       this.clearIdleTimer(browser);
 
       if (browser.connected) {
+        browserPoolOperationsTotal.inc({ operation: 'acquire' });
+        this.updatePoolGauges();
+        endTimer();
         return browser;
       }
 
       this.removeBrowser(browser);
+      endTimer();
       return this.acquire();
     }
 
     if (this.browsers.length < this.maxBrowsers) {
       const browser = await this.createBrowser();
       this.browsers.push(browser);
+      browserPoolOperationsTotal.inc({ operation: 'acquire' });
+      this.updatePoolGauges();
+      endTimer();
       return browser;
     }
 
-    return this.waitForBrowser();
+    const browser = await this.waitForBrowser();
+    browserPoolOperationsTotal.inc({ operation: 'acquire' });
+    this.updatePoolGauges();
+    endTimer();
+    return browser;
   }
 
   async release(browser: Browser): Promise<void> {
@@ -121,10 +141,13 @@ export class BrowserPool {
       await Promise.allSettled(pages.slice(1).map(page => page.close()));
     }
 
+    browserPoolOperationsTotal.inc({ operation: 'release' });
+
     // If there are waiting requests, give them the browser immediately
     if (this.waitQueue.length > 0) {
       const resolve = this.waitQueue.shift()!;
       resolve(browser);
+      this.updatePoolGauges();
       return;
     }
 
@@ -135,6 +158,8 @@ export class BrowserPool {
     } else {
       this.removeBrowser(browser);
     }
+
+    this.updatePoolGauges();
   }
 
   getStats() {
@@ -182,6 +207,8 @@ export class BrowserPool {
       this.removeBrowser(browser);
     });
 
+    browserPoolOperationsTotal.inc({ operation: 'create' });
+
     return browser;
   }
 
@@ -194,6 +221,8 @@ export class BrowserPool {
           this.waitQueue.splice(index, 1);
         }
 
+        browserPoolQueueDepth.set(this.waitQueue.length);
+
         reject(new Error('Browser acquisition timeout'));
       }, this.acquireTimeoutMs);
 
@@ -203,6 +232,7 @@ export class BrowserPool {
       };
 
       this.waitQueue.push(wrappedResolve);
+      browserPoolQueueDepth.set(this.waitQueue.length);
     });
   }
 
@@ -235,6 +265,12 @@ export class BrowserPool {
     }
   }
 
+  private updatePoolGauges(): void {
+    browserPoolSize.set({ state: 'available' }, this.available.length);
+    browserPoolSize.set({ state: 'in_use' }, this.browsers.length - this.available.length);
+    browserPoolQueueDepth.set(this.waitQueue.length);
+  }
+
   private removeBrowser(browser: Browser): void {
     this.clearIdleTimer(browser);
 
@@ -250,6 +286,9 @@ export class BrowserPool {
     }
 
     browser.close().catch(() => { });
+
+    browserPoolOperationsTotal.inc({ operation: 'destroy' });
+    this.updatePoolGauges();
   }
 }
 
