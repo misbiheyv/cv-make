@@ -1,5 +1,9 @@
 import puppeteer, { Browser } from 'puppeteer';
 
+import { createLogger } from '@/lib/logger';
+
+const log = createLogger('browserPool');
+
 interface BrowserPoolOptions {
   max?: number;
   min?: number;
@@ -33,7 +37,7 @@ export class BrowserPool {
   async initialize(): Promise<void> {
     if (!this.isInitialized && !this.pendingInitialization) {
       this.pendingInitialization = new Promise(async (resolve) => {
-        console.log(`Initializing browser pool with ${this.minBrowsers} browsers...`);
+        log.info({ minBrowsers: this.minBrowsers }, 'Initializing browser pool');
   
         const browsers = await Promise.allSettled(
           Array.from(
@@ -44,7 +48,7 @@ export class BrowserPool {
     
         browsers.forEach((browser) => {    
           if (browser.status === 'rejected') {
-            return console.error('Failed to initialize browser:', browser.reason);
+            log.error({ error: browser.reason }, 'Failed to initialize browser'); return;
           }
     
           this.browsers.push(browser.value);
@@ -52,7 +56,7 @@ export class BrowserPool {
         })
     
         this.isInitialized = true;
-        console.log(`Browser pool initialized with ${this.browsers.length} browsers`);
+        log.info({ totalBrowsers: this.browsers.length }, 'Browser pool initialized');
   
         resolve();
       });
@@ -62,7 +66,7 @@ export class BrowserPool {
   }
 
   async destroy(): Promise<void> {
-    console.log('Destroying browser pool...');
+    log.info('Destroying browser pool');
 
     this.waitQueue = [];
 
@@ -73,7 +77,7 @@ export class BrowserPool {
 
     await Promise.all(
       this.browsers.map(browser =>
-        browser.close().catch(err => console.error('Error closing browser:', err))
+        browser.close().catch(err => log.error({ error: err }, 'Error closing browser'))
       )
     );
 
@@ -81,7 +85,7 @@ export class BrowserPool {
     this.available = [];
     this.isInitialized = false;
 
-    console.log('Browser pool destroyed');
+    log.info('Browser pool destroyed');
   }
 
   async acquire(): Promise<Browser> {
@@ -174,7 +178,7 @@ export class BrowserPool {
     });
 
     browser.on('disconnected', () => {
-      console.warn('Browser disconnected, removing from pool');
+      log.warn('Browser disconnected, removing from pool');
       this.removeBrowser(browser);
     });
 
@@ -213,7 +217,7 @@ export class BrowserPool {
       this.idleTimers.delete(browser);
 
       if (this.browsers.length > this.minBrowsers && this.available.includes(browser)) {
-        console.log(`Closing idle browser (pool: ${this.browsers.length} → ${this.browsers.length - 1})`);
+        log.info({ poolSize: this.browsers.length, newPoolSize: this.browsers.length - 1 }, 'Closing idle browser');
         this.removeBrowser(browser);
       }
     }, this.idleTimeoutMs);
@@ -258,7 +262,7 @@ export const browserPool = new BrowserPool({
 
 // Initialize pool on module load
 browserPool.initialize().catch(err => {
-  console.error('Failed to initialize browser pool:', err);
+  log.error({ error: err }, 'Failed to initialize browser pool');
 });
 
 // Cleanup on process exit (only in Node.js runtime, not Edge Runtime)
