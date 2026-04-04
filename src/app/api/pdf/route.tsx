@@ -2,34 +2,49 @@ import { NextRequest, NextResponse } from 'next/server';
 import { renderToHtml } from '@/lib/renderToHtml';
 import { ResumeDataSchema } from '@/lib/validation';
 import { browserPool } from '@/lib/browserPool';
+import { createLogger } from '@/lib/logger';
+import {
+  httpRequestsTotal,
+  httpRequestDuration,
+  pdfGenerationDuration,
+  pdfGenerationTotal,
+} from '@/lib/metrics';
 import z from 'zod';
 import { ResumeTemplate, PAGE_PADDINGS_HORIZONTAL, PAGE_PADDINGS_VERTICAL } from '@/templates/basicTemplate';
 import { getFullHtmlDocument } from '@/templates/basicTemplate/server';
 
 const PDF_GENERATION_TIMEOUT = 10_000;
 
+const log = createLogger('pdf');
+
 /**
  * Generate PDF from resume data
- * 
+ *
  * Features:
  * - Browser pooling for better performance (5-10x faster)
  * - Rate limiting via middleware (10 requests per 3 minutes)
  * - Timeouts to meet SLA requirements (<5 seconds)
  * - Graceful error handling and cleanup
- * 
+ * - Structured logging and Prometheus metrics
+ *
  * Note: Rate limiting is handled by middleware (src/middleware.ts)
  */
 export async function POST(request: NextRequest) {
-    const startTime = Date.now();
+    const requestId = request.headers.get('X-Request-Id') ?? undefined;
+    const reqLog = requestId ? createLogger('pdf', requestId) : log;
+    const endHttpTimer = httpRequestDuration.startTimer({ method: 'POST', route: '/api/pdf' });
     let browser;
     let page;
-    let generationError;
+    let statusCode = 200;
 
     try {
+        reqLog.info({ requestId }, 'PDF generation request received');
+
         const { data, success, error } = await request.json().then(ResumeDataSchema.safeParse);
 
         if (!success) {
-            generationError = error;
+            statusCode = 400;
+            reqLog.warn({ requestId, errors: z.treeifyError(error).errors }, 'Validation failed');
 
             return NextResponse.json(
                 {
@@ -39,6 +54,8 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+
+        const endPdfTimer = pdfGenerationDuration.startTimer();
 
         const resumeHTML = await renderToHtml(<ResumeTemplate data={data} />).then(getFullHtmlDocument);
 
@@ -62,21 +79,35 @@ export async function POST(request: NextRequest) {
             timeout: PDF_GENERATION_TIMEOUT
         });
 
+        endPdfTimer({ status: 'success' });
+        pdfGenerationTotal.inc({ status: 'success' });
+
+        const duration = endHttpTimer({ status: '200' });
+        httpRequestsTotal.inc({ method: 'POST', route: '/api/pdf', status: '200' });
+
+        reqLog.info({ requestId, durationMs: Math.round(duration * 1000) }, 'PDF generated successfully');
+
         return new NextResponse(Buffer.from(pdfBuffer), {
             headers: {
                 'Content-Type': 'application/pdf',
                 'Content-Disposition': `attachment; filename="${data.personalInfo.fullName || 'resume'}.pdf"`,
-                'X-Generation-Time': `${Date.now() - startTime}ms`,
+                'X-Generation-Time': `${Math.round(duration * 1000)}ms`,
             },
         });
     } catch (error) {
-        generationError = error;
-
         const isTimeout = error instanceof Error && error.message.includes('timeout');
-        const statusCode = isTimeout ? 504 : 500;
+        statusCode = isTimeout ? 504 : 500;
         const errorMessage = isTimeout
             ? 'PDF generation timeout. Please try again.'
             : 'Failed to generate PDF';
+
+        const pdfStatus = isTimeout ? 'timeout' : 'error';
+        pdfGenerationTotal.inc({ status: pdfStatus });
+
+        endHttpTimer({ status: String(statusCode) });
+        httpRequestsTotal.inc({ method: 'POST', route: '/api/pdf', status: String(statusCode) });
+
+        reqLog.error({ requestId, error, statusCode }, 'PDF generation failed');
 
         return NextResponse.json(
             { error: errorMessage },
@@ -87,7 +118,7 @@ export async function POST(request: NextRequest) {
             try {
                 await page.close();
             } catch (e) {
-                console.error('Error closing page:', e);
+                reqLog.error({ requestId, error: e }, 'Error closing page');
             }
         }
 
@@ -95,16 +126,8 @@ export async function POST(request: NextRequest) {
             try {
                 await browserPool.release(browser);
             } catch (e) {
-                console.error('Error releasing browser:', e);
+                reqLog.error({ requestId, error: e }, 'Error releasing browser');
             }
-        }
-
-        const duration = Date.now() - startTime;
-
-        if (generationError) {
-            console.error(`PDF generation error after ${duration}ms:`, generationError);
-        } else {
-            console.log(`PDF generated successfully in ${duration}ms`);
         }
     }
 }
