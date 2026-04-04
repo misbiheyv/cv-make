@@ -2,6 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { generatePdf, getHealth } from '../helpers/http';
 import { VALID_RESUME_DATA } from '../fixtures/test-data';
 
+function uniqueIp(index: number): string {
+  return `10.0.${Math.floor(index / 256)}.${(index % 256) + 1}`;
+}
+
 function percentile(sorted: number[], p: number): number {
   const index = Math.ceil((p / 100) * sorted.length) - 1;
   return sorted[Math.max(0, index)];
@@ -26,16 +30,16 @@ function printTable(label: string, durations: number[]) {
   console.log(`    Max:      ${formatMs(max)}`);
 }
 
-async function timedPdf(): Promise<{ duration: number; status: number }> {
+async function timedPdf(ip?: string): Promise<{ duration: number; status: number }> {
   const start = performance.now();
-  const res = await generatePdf(VALID_RESUME_DATA);
+  const res = await generatePdf(VALID_RESUME_DATA, ip ? { ip } : undefined);
   const duration = performance.now() - start;
   return { duration, status: res.status };
 }
 
 describe('Performance Benchmarks', () => {
   it('cold start responds under 5 seconds', async () => {
-    const { duration, status } = await timedPdf();
+    const { duration, status } = await timedPdf(uniqueIp(0));
 
     console.log(`\n  Cold start: ${formatMs(duration)}`);
 
@@ -45,10 +49,10 @@ describe('Performance Benchmarks', () => {
 
   it('warm request responds under 3 seconds', async () => {
     // Warmup request
-    await timedPdf();
+    await timedPdf(uniqueIp(100));
 
     // Measured request
-    const { duration, status } = await timedPdf();
+    const { duration, status } = await timedPdf(uniqueIp(101));
 
     console.log(`\n  Warm request: ${formatMs(duration)}`);
 
@@ -58,11 +62,11 @@ describe('Performance Benchmarks', () => {
 
   it('sequential throughput over 10 requests', async () => {
     // Warmup
-    await timedPdf();
+    await timedPdf(uniqueIp(200));
 
     const durations: number[] = [];
     for (let i = 0; i < 10; i++) {
-      const { duration, status } = await timedPdf();
+      const { duration, status } = await timedPdf(uniqueIp(201 + i));
       expect(status).toBe(200);
       durations.push(duration);
     }
@@ -72,12 +76,12 @@ describe('Performance Benchmarks', () => {
 
   it('concurrent throughput with 10 simultaneous requests', async () => {
     // Warmup
-    await timedPdf();
+    await timedPdf(uniqueIp(300));
 
     const totalStart = performance.now();
 
     const results = await Promise.all(
-      Array.from({ length: 10 }, () => timedPdf()),
+      Array.from({ length: 10 }, (_, i) => timedPdf(uniqueIp(301 + i))),
     );
 
     const totalElapsed = performance.now() - totalStart;
@@ -93,13 +97,13 @@ describe('Performance Benchmarks', () => {
 
   it('pool scales under heavy concurrent load (15 requests)', async () => {
     // Warmup
-    await timedPdf();
+    await timedPdf(uniqueIp(400));
 
     const healthBefore = await getHealth();
     const totalStart = performance.now();
 
     const results = await Promise.all(
-      Array.from({ length: 15 }, () => timedPdf()),
+      Array.from({ length: 15 }, (_, i) => timedPdf(uniqueIp(401 + i))),
     );
 
     const totalElapsed = performance.now() - totalStart;
