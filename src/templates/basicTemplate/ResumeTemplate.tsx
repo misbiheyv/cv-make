@@ -8,6 +8,7 @@ interface ResumeTemplateProps {
 export function ResumeTemplate({ data, showPlaceholders = false }: ResumeTemplateProps) {
   const { personalInfo, workExperience, education, skills, languages } = data;
   const contactParts = personalInfo.links.filter(Boolean);
+  const infoParts = [personalInfo.phone, personalInfo.city].filter(Boolean);
 
   return (
     <div className="resume">
@@ -16,6 +17,11 @@ export function ResumeTemplate({ data, showPlaceholders = false }: ResumeTemplat
         <h1 className="name">
           {personalInfo.fullName || (showPlaceholders ? 'Your Name' : '')}
         </h1>
+        {infoParts.length > 0 && (
+          <div className="contact-info">
+            {infoParts.join(' | ')}
+          </div>
+        )}
         <div className="contact-info">
           {contactParts.length > 0
             ? contactParts.join(' | ')
@@ -73,16 +79,18 @@ export function ResumeTemplate({ data, showPlaceholders = false }: ResumeTemplat
             <div key={edu.id} className="education-item">
               <div className="item-header">
                 <span className="item-title">
-                  {edu.degree || (showPlaceholders ? 'Degree' : '')}
+                  {edu.institution || (showPlaceholders ? 'Institution' : '')}
                 </span>
                 <span className="item-date">
-                  {edu.startDate || (showPlaceholders ? 'Start' : '')} -{' '}
-                  {edu.endDate || (showPlaceholders ? 'End' : '')}
+                  {edu.location}
                 </span>
               </div>
               <div className="item-subtitle">
-                <span>{edu.institution || (showPlaceholders ? 'Institution' : '')}</span>
-                <span>{edu.location}</span>
+                <span>{edu.degree || (showPlaceholders ? 'Degree' : '')}</span>
+                <span>
+                  {edu.startDate || (showPlaceholders ? 'Start' : '')} -{' '}
+                  {edu.endDate || (showPlaceholders ? 'End' : '')}
+                </span>
               </div>
               {edu.description && <p>{edu.description}</p>}
             </div>

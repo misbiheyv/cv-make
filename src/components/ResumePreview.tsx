@@ -2,8 +2,7 @@
 
 import { useState, useEffect, memo } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
-import { ResumeTemplate } from '@/templates/ResumeTemplate';
-import { resumeStyles } from '@/templates/resumeStyles';
+import { ResumeTemplate, clientTemplateStyles } from '@/templates/basicTemplate';
 
 export const ResumePreview = memo(function ResumePreview() {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -20,7 +19,7 @@ export const ResumePreview = memo(function ResumePreview() {
   if (!isHydrated) {
     return (
       <div className="bg-gray-600 min-h-full p-6 flex justify-center items-center overflow-auto">
-        <div className="text-white">Loading resume...</div>
+        <div className="text-white">Loading...</div>
       </div>
     );
   }
@@ -35,7 +34,7 @@ export const ResumePreview = memo(function ResumePreview() {
 
   return (
     <div className="bg-gray-600 min-h-full p-6 flex justify-center overflow-auto">
-      <style>{resumeStyles}</style>
+      <style>{clientTemplateStyles}</style>
       <div className="resume-container shadow-lg">
         <ResumeTemplate data={data} showPlaceholders />
       </div>

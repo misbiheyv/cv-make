@@ -1,5 +1,32 @@
-// CSS styles for resume template - used both for preview and PDF generation
-export const resumeStyles = `
+// CSS styles for resume template - preview and shared styles
+
+export const PAGE_PADDINGS_VERTICAL = '8mm';
+export const PAGE_PADDINGS_HORIZONTAL = '8mm';
+
+const fonts = `
+@font-face {
+  font-family: 'CMU Serif';
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url('/fonts/CMUSerif.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'CMU Serif';
+  font-style: normal;
+  font-weight: bold;
+  font-display: swap;
+  src: url('/fonts/CMUSerif-Bold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'CMU Serif';
+  font-style: italic;
+  font-weight: normal;
+  font-display: swap;
+  src: url('/fonts/CMUSerif-Italic.woff2') format('woff2');
+}`;
+
+export const styles = `
 .resume-container * {
   margin: 0;
   padding: 0;
@@ -11,26 +38,26 @@ export const resumeStyles = `
 }
 
 .resume-container {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 11pt;
-  line-height: 1.4;
+  font-family: 'CMU Serif', 'Times New Roman', Times, serif;
+  font-size: 14px;
+  line-height: 1.15;
   color: #000;
   background: #fff;
 }
 
 .resume-container .resume {
-  width: 210mm;
-  min-height: 297mm;
-  padding: 15mm 20mm;
+  width: 215.9mm;
+  min-height: 279.4mm;
+  padding: ${PAGE_PADDINGS_VERTICAL} ${PAGE_PADDINGS_HORIZONTAL};
   margin: 0 auto;
   background: #fff;
 }
 
 .resume-container .header {
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   border-bottom: 1px solid #000;
-  padding-bottom: 12px;
+  padding-bottom: 8px;
 }
 
 .resume-container .name {
@@ -42,12 +69,15 @@ export const resumeStyles = `
 
 .resume-container .contact-info {
   font-size: 10pt;
-  color: #333;
+  color: #000;
+}
+
+.resume-container .contact-info + .contact-info {
+  margin-top: 2px;
 }
 
 .resume-container .summary {
   margin-bottom: 12px;
-  text-align: justify;
 }
 
 .resume-container .summary p {
@@ -55,22 +85,20 @@ export const resumeStyles = `
 }
 
 .resume-container .section {
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 .resume-container .section-title {
   font-size: 12pt;
-  font-weight: bold;
-  text-transform: uppercase;
+  font-variant: small-caps;
   border-bottom: 1px solid #000;
-  margin: 0 0 8px 0;
+  margin: 0 0 4px 0;
   padding-bottom: 2px;
-  letter-spacing: 0.5px;
 }
 
 .resume-container .experience-item,
 .resume-container .education-item {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .resume-container .item-header {
@@ -85,15 +113,15 @@ export const resumeStyles = `
 }
 
 .resume-container .item-date {
-  font-style: italic;
   font-size: 10pt;
 }
 
 .resume-container .item-subtitle {
   display: flex;
   justify-content: space-between;
+  font-size: 10pt;
   font-style: italic;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .resume-container .bullets {
@@ -102,8 +130,11 @@ export const resumeStyles = `
 }
 
 .resume-container .bullets li {
-  margin-bottom: 2px;
-  text-align: justify;
+  margin-bottom: 1px;
+}
+
+.resume-container .bullets li::marker {
+  font-size: 0.6em;
 }
 
 .resume-container .skills-list {
@@ -129,22 +160,6 @@ export const resumeStyles = `
 
 .resume-container .empty-state p {
   margin: 4px 0;
-}
-`;
+}`;
 
-// Full HTML document wrapper for PDF generation
-export function getFullHtmlDocument(bodyContent: string): string {
-  return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resume</title>
-  <style>${resumeStyles}</style>
-</head>
-<body class="resume-container">
-  ${bodyContent}
-</body>
-</html>`;
-}
+export const resumeStyles = fonts + styles;

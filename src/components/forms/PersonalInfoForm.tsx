@@ -23,6 +23,20 @@ export function PersonalInfoForm() {
         placeholder="John Doe"
       />
 
+      <FormField
+        label="Phone"
+        value={personalInfo.phone ?? ''}
+        onChange={(value) => updatePersonalInfo({ phone: value })}
+        placeholder="+1 (234) 567-8900"
+      />
+
+      <FormField
+        label="City"
+        value={personalInfo.city ?? ''}
+        onChange={(value) => updatePersonalInfo({ city: value })}
+        placeholder="New York, NY"
+      />
+
       <div>
         <label className="form-label">Links</label>
         <div className="space-y-2">

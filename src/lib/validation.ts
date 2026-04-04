@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 export const PersonalInfoSchema = z.object({
   fullName: z.string(),
+  phone: z.string().optional(),
+  city: z.string().optional(),
   links: z.array(z.string()),
   summary: z.string(),
 });

@@ -1,5 +1,7 @@
 export interface PersonalInfo {
   fullName: string;
+  phone?: string;
+  city?: string;
   links: string[];
   summary: string;
 }

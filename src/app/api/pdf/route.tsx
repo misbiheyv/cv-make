@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ResumeTemplate } from '@/templates/ResumeTemplate';
-import { getFullHtmlDocument } from '@/templates/resumeStyles';
 import { renderToHtml } from '@/lib/renderToHtml';
 import { ResumeDataSchema } from '@/lib/validation';
 import { browserPool } from '@/lib/browserPool';
 import z from 'zod';
+import { ResumeTemplate, PAGE_PADDINGS_HORIZONTAL, PAGE_PADDINGS_VERTICAL } from '@/templates/basicTemplate';
+import { getFullHtmlDocument } from '@/templates/basicTemplate/server';
 
 const PDF_GENERATION_TIMEOUT = 10_000;
 
@@ -54,10 +54,10 @@ export async function POST(request: NextRequest) {
             format: 'A4',
             printBackground: true,
             margin: {
-                top: '0',
-                right: '0',
-                bottom: '0',
-                left: '0',
+                top: PAGE_PADDINGS_VERTICAL,
+                bottom: PAGE_PADDINGS_VERTICAL,
+                right: PAGE_PADDINGS_HORIZONTAL,
+                left: PAGE_PADDINGS_HORIZONTAL,
             },
             timeout: PDF_GENERATION_TIMEOUT
         });

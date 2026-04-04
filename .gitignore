@@ -68,3 +68,7 @@ logs
 # temporary files
 tmp/
 temp/
+
+
+# ai
+docs/superpowers
