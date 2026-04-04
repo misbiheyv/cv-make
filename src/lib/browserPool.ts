@@ -15,6 +15,7 @@ interface BrowserPoolOptions {
   min?: number;
   idleTimeoutMs?: number;
   acquireTimeoutMs?: number;
+  maxQueueSize?: number;
 }
 
 /**
@@ -29,6 +30,8 @@ export class BrowserPool {
   private minBrowsers: number;
   private idleTimeoutMs: number;
   private acquireTimeoutMs: number;
+  private maxQueueSize: number;
+  private pendingCreations = 0;
   private waitQueue: Array<(browser: Browser) => void> = [];
   private isInitialized = false;
   private idleTimers = new Map<Browser, ReturnType<typeof setTimeout>>();
@@ -38,6 +41,7 @@ export class BrowserPool {
     this.minBrowsers = options.min ?? 1;
     this.idleTimeoutMs = options.idleTimeoutMs ?? 30000;
     this.acquireTimeoutMs = options.acquireTimeoutMs ?? 60000;
+    this.maxQueueSize = options.maxQueueSize ?? 50;
   }
 
   async initialize(): Promise<void> {
@@ -118,13 +122,21 @@ export class BrowserPool {
       return this.acquire();
     }
 
-    if (this.browsers.length < this.maxBrowsers) {
-      const browser = await this.createBrowser();
-      this.browsers.push(browser);
-      browserPoolOperationsTotal.inc({ operation: 'acquire' });
-      this.updatePoolGauges();
-      endTimer();
-      return browser;
+    if (this.browsers.length + this.pendingCreations < this.maxBrowsers) {
+      this.pendingCreations++;
+      try {
+        const browser = await this.createBrowser();
+        this.browsers.push(browser);
+        browserPoolOperationsTotal.inc({ operation: 'acquire' });
+        this.updatePoolGauges();
+        endTimer();
+        return browser;
+      } catch (err) {
+        endTimer();
+        throw err;
+      } finally {
+        this.pendingCreations--;
+      }
     }
 
     const browser = await this.waitForBrowser();
@@ -168,6 +180,7 @@ export class BrowserPool {
       available: this.available.length,
       inUse: this.browsers.length - this.available.length,
       waiting: this.waitQueue.length,
+      pendingCreations: this.pendingCreations,
       maxBrowsers: this.maxBrowsers,
     };
   }
@@ -213,9 +226,15 @@ export class BrowserPool {
   }
 
   private waitForBrowser(): Promise<Browser> {
+    if (this.waitQueue.length >= this.maxQueueSize) {
+      return Promise.reject(new Error('Server is busy, please try again later'));
+    }
+
     return new Promise((resolve, reject) => {
+      let wrappedResolve: (browser: Browser) => void;
+
       const timeout = setTimeout(() => {
-        const index = this.waitQueue.indexOf(resolve);
+        const index = this.waitQueue.indexOf(wrappedResolve);
 
         if (index > -1) {
           this.waitQueue.splice(index, 1);
@@ -226,7 +245,7 @@ export class BrowserPool {
         reject(new Error('Browser acquisition timeout'));
       }, this.acquireTimeoutMs);
 
-      const wrappedResolve = (browser: Browser) => {
+      wrappedResolve = (browser: Browser) => {
         clearTimeout(timeout);
         resolve(browser);
       };
@@ -297,6 +316,7 @@ export const browserPool = new BrowserPool({
   max: Number(process.env.BROWSER_POOL_MAX || 5),
   min: Number(process.env.BROWSER_POOL_MIN || 1),
   idleTimeoutMs: Number(process.env.BROWSER_POOL_IDLE_TIMEOUT_MS || 60000),
+  maxQueueSize: Number(process.env.BROWSER_POOL_MAX_QUEUE || 100),
 });
 
 // Initialize pool on module load

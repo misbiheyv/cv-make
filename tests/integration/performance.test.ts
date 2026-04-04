@@ -95,7 +95,7 @@ describe('Performance Benchmarks', () => {
     console.log(`    Total wall time: ${formatMs(totalElapsed)}`);
   }, 32000);
 
-  it('pool scales under heavy concurrent load (20 requests)', async () => {
+  it('pool scales under heavy concurrent load (500 requests)', async () => {
     // Warmup
     await timedPdf(uniqueIp(400));
 
@@ -103,21 +103,44 @@ describe('Performance Benchmarks', () => {
     const totalStart = performance.now();
 
     const results = await Promise.all(
-      Array.from({ length: 20 }, (_, i) => timedPdf(uniqueIp(401 + i))),
+      Array.from({ length: 500 },
+        (_, i) => new Promise<{duration: number; status: number;}>((resolve) =>
+          setTimeout(() =>
+            timedPdf(uniqueIp(401 + i)).then(resolve),
+            Math.floor(Math.random() * 10_000)
+          )
+        )
+      ),
     );
 
     const totalElapsed = performance.now() - totalStart;
-    const durations = results.map((r) => r.duration);
 
     const healthAfter = await getHealth();
 
-    results.forEach((r) => {
-      expect(r.status).toBe(200);
-    });
+    const successes = results.filter((r) => r.status === 200);
+    const busyResponses = results.filter((r) => r.status === 503);
+    const errors = results.filter((r) => r.status !== 200 && r.status !== 503);
 
-    printTable('Heavy load (20 simultaneous)', durations);
+    // No 500 errors should occur — only 200s and 503s
+    expect(errors).toHaveLength(0);
+
+    // At least some requests should succeed
+    expect(successes.length).toBeGreaterThan(0);
+
+    // Pool should never exceed maxBrowsers
+    expect(healthAfter.browserPool.total).toBeLessThanOrEqual(healthAfter.browserPool.maxBrowsers);
+
+    // 503 responses should have Retry-After header (tested via route-level integration)
+    if (successes.length > 0) {
+      printTable('Successful requests', successes.map((r) => r.duration));
+    }
+
+    console.log(`\n  Heavy load summary (500 requests):`);
+    console.log(`    Successes (200): ${successes.length}`);
+    console.log(`    Queue full (503): ${busyResponses.length}`);
+    console.log(`    Errors (5xx): ${errors.length}`);
     console.log(`    Total wall time: ${formatMs(totalElapsed)}`);
     console.log(`    Pool before: total=${healthBefore.browserPool.total}, max=${healthBefore.browserPool.maxBrowsers}`);
     console.log(`    Pool after:  total=${healthAfter.browserPool.total}, max=${healthAfter.browserPool.maxBrowsers}`);
-  }, 32000);
+  }, 320000);
 });

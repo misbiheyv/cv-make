@@ -98,13 +98,24 @@ export async function POST(request: NextRequest) {
             },
         });
     } catch (error) {
+        const isQueueFull = error instanceof Error && error.message.includes('Server is busy');
         const isTimeout = error instanceof Error && error.message.includes('timeout');
-        statusCode = isTimeout ? 504 : 500;
-        const errorMessage = isTimeout
-            ? 'PDF generation timeout. Please try again.'
-            : 'Failed to generate PDF';
 
-        const pdfStatus = isTimeout ? 'timeout' : 'error';
+        if (isQueueFull) {
+            statusCode = 503;
+        } else if (isTimeout) {
+            statusCode = 504;
+        } else {
+            statusCode = 500;
+        }
+
+        const errorMessage = isQueueFull
+            ? 'Server is busy, please try again later'
+            : isTimeout
+                ? 'PDF generation timeout. Please try again.'
+                : 'Failed to generate PDF';
+
+        const pdfStatus = isQueueFull ? 'queue_full' : isTimeout ? 'timeout' : 'error';
         pdfGenerationTotal.inc({ status: pdfStatus });
 
         endHttpTimer({ status: String(statusCode) });
@@ -112,9 +123,14 @@ export async function POST(request: NextRequest) {
 
         reqLog.error({ requestId, error, statusCode }, 'PDF generation failed');
 
+        const headers: Record<string, string> = {};
+        if (isQueueFull) {
+            headers['Retry-After'] = '5';
+        }
+
         return NextResponse.json(
             { error: errorMessage },
-            { status: statusCode }
+            { status: statusCode, headers }
         );
     } finally {
         if (page) {
