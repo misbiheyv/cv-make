@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 import { browserPool } from '@/lib/browserPool';
+import { createLogger } from '@/lib/logger';
+
+const log = createLogger('health');
 
 /**
  * Health check endpoint for monitoring
@@ -47,7 +50,7 @@ export async function GET() {
       recommendations,
     });
   } catch (error) {
-    console.error('Health check error:', error);
+    log.error({ error }, 'Health check failed');
     return NextResponse.json(
       {
         status: 'unhealthy',
