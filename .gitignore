@@ -12,12 +12,6 @@
 
 # testing
 /coverage
-*.test.ts
-*.test.tsx
-*.spec.ts
-*.spec.tsx
-/__tests__/
-/e2e/
 
 # next.js
 /.next/
@@ -68,7 +62,3 @@ logs
 # temporary files
 tmp/
 temp/
-
-
-# ai
-docs/superpowers

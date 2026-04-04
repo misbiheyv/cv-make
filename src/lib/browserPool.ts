@@ -10,7 +10,7 @@ interface BrowserPoolOptions {
  * Browser Pool for efficient Puppeteer browser management
  * Reuses browser instances to reduce overhead and improve performance
  */
-class BrowserPool {
+export class BrowserPool {
   private pendingInitialization?: Promise<void>;
   private browsers: Browser[] = [];
   private available: Browser[] = [];
