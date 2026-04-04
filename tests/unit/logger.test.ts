@@ -33,13 +33,13 @@ describe('logger', () => {
   });
 
   it('createLogger returns a child logger with component field', () => {
-    const child = createLogger('browserPool');
+    createLogger('browserPool');
 
     expect(logger.child).toHaveBeenCalledWith({ component: 'browserPool' });
   });
 
   it('createLogger with requestId includes it in child context', () => {
-    const child = createLogger('pdf', 'req-123');
+    createLogger('pdf', 'req-123');
 
     expect(logger.child).toHaveBeenCalledWith({
       component: 'pdf',
