@@ -46,6 +46,9 @@ export async function POST(request: NextRequest) {
             statusCode = 400;
             reqLog.warn({ requestId, errors: z.treeifyError(error).errors }, 'Validation failed');
 
+            endHttpTimer({ status: '400' });
+            httpRequestsTotal.inc({ method: 'POST', route: '/api/pdf', status: '400' });
+
             return NextResponse.json(
                 {
                     error: 'Invalid resume data',
