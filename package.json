@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "biome check src/",
+    "lint:fix": "biome check --write src/",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run tests/unit",
     "test:integration": "vitest run tests/integration --test-timeout 30000",
     "test:all": "vitest run tests --test-timeout 30000"
@@ -23,6 +25,7 @@
     "zustand": "^5.0.10"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.4.8",
     "@tailwindcss/postcss": "^4.0.6",
     "@types/node": "^22.13.1",
     "@types/react": "^19.2.5",
