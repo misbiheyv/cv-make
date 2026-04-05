@@ -41,6 +41,9 @@ services:
       - GLOBAL_RATE_BURST=${GLOBAL_RATE_BURST}
       - DOMAIN=${DOMAIN:-localhost}
       - NGINX_ENVSUBST_VARS=RATE_LIMIT,RATE_BURST,GLOBAL_RATE_LIMIT,GLOBAL_RATE_BURST,DOMAIN
+    depends_on:
+      app-blue:
+        condition: service_healthy
     networks:
       - resume_network
 
