@@ -13,14 +13,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 25
+          node-version: 25.2.1
       - uses: actions/cache@v4
         id: node-modules
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
       - if: steps.node-modules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm ci --verbose
 
   lint:
     name: Lint
@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 25
+          node-version: 25.2.1
       - uses: actions/cache/restore@v4
         with:
           path: node_modules
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 25
+          node-version: 25.2.1
       - uses: actions/cache/restore@v4
         with:
           path: node_modules
@@ -60,7 +60,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 25
+          node-version: 25.2.1
       - uses: actions/cache/restore@v4
         with:
           path: node_modules
