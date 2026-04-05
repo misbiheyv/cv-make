@@ -1,4 +1,4 @@
-# Resume Builder
+# CV Make
 
 A modern resume builder application built with Next.js, TypeScript, and Tailwind CSS. Create professional resumes with real-time preview and export to PDF.
 

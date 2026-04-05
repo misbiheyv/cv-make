@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Blue-green deploy script for resume-builder
+# Blue-green deploy script for the app
 # Usage: ./scripts/deploy.sh <tag>
 # Example: ./scripts/deploy.sh abc1234
 # IMAGE_NAME must be set in .env (e.g. ghcr.io/user/resume)

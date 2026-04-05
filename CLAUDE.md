@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Resume Builder — a Next.js 15 (App Router) application for creating resumes with real-time preview and server-side PDF generation via Puppeteer. Uses React 19, TypeScript 5.7, Tailwind CSS 4, Zustand for state, and Biome for linting/formatting.
+CV Make — a Next.js 15 (App Router) application for creating resumes with real-time preview and server-side PDF generation via Puppeteer. Uses React 19, TypeScript 5.7, Tailwind CSS 4, Zustand for state, and Biome for linting/formatting.
 
 ## Commands
 

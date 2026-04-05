@@ -52,7 +52,7 @@ describe('logger', () => {
       expect.objectContaining({
         level: expect.any(String),
         base: expect.objectContaining({
-          service: 'resume-builder',
+          service: 'cv-make',
         }),
       })
     );

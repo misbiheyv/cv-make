@@ -3,7 +3,7 @@ import pino from 'pino';
 export const logger = pino({
 	level: process.env.LOG_LEVEL ?? (process.env.NODE_ENV === 'production' ? 'info' : 'debug'),
 	base: {
-		service: 'resume-builder',
+		service: 'cv-make',
 		env: process.env.NODE_ENV ?? 'development',
 	},
 });

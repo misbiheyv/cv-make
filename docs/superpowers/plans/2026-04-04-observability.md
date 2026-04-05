@@ -1550,7 +1550,7 @@ Create `grafana/dashboards/overview.json`:
   "tags": ["resume-builder", "observability"],
   "templating": { "list": [] },
   "time": { "from": "now-1h", "to": "now" },
-  "title": "Resume Builder Overview",
+  "title": "CV Make Overview",
   "uid": "resume-builder-overview"
 }
 ```

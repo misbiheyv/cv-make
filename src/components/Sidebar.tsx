@@ -53,7 +53,7 @@ export function Sidebar() {
 			<div className="sticky top-0 bg-white border-b border-gray-300 p-4 z-10 shadow-sm">
 				<h1 className="text-xl font-bold flex items-center gap-2">
 					<span className="text-2xl">📄</span>
-					Resume Builder
+					CV Make
 				</h1>
 			</div>
 

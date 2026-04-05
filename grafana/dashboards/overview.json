@@ -249,9 +249,9 @@
     }
   ],
   "schemaVersion": 39,
-  "tags": ["resume-builder", "observability"],
+  "tags": ["cv-make", "observability"],
   "templating": { "list": [] },
   "time": { "from": "now-1h", "to": "now" },
-  "title": "Resume Builder Overview",
-  "uid": "resume-builder-overview"
+  "title": "CV Make Overview",
+  "uid": "cv-make-overview"
 }
