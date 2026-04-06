@@ -28,32 +28,28 @@ export function FormField({
 	if (type === 'textarea') {
 		return (
 			<div className={className}>
-				<label className="form-label">
-					{label && <span>{label}</span>}
-					<textarea
-						className={`form-input resize-y`}
-						value={value}
-						onChange={handleChange}
-						placeholder={placeholder}
-						style={{ minHeight }}
-					/>
-				</label>
+				{label && <span className="form-label">{label}</span>}
+				<textarea
+					className="form-input resize-y"
+					value={value}
+					onChange={handleChange}
+					placeholder={placeholder}
+					style={{ minHeight }}
+				/>
 			</div>
 		);
 	}
 
 	return (
 		<div className={className}>
-			<label className="form-label">
-				{label && <span>{label}</span>}
-				<input
-					type={type}
-					className="form-input"
-					value={value}
-					onChange={handleChange}
-					placeholder={placeholder}
-				/>
-			</label>
+			{label && <span className="form-label">{label}</span>}
+			<input
+				type={type}
+				className="form-input"
+				value={value}
+				onChange={handleChange}
+				placeholder={placeholder}
+			/>
 		</div>
 	);
 }
