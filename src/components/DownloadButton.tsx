@@ -79,14 +79,16 @@ export function DownloadButton() {
 			type="button"
 			onClick={handleDownload}
 			disabled={isDownloading}
-			className="btn-primary flex items-center gap-2 shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
+			className="btn-primary group flex items-center gap-0 hover:gap-2 shadow-md disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden transition-all duration-200"
 		>
 			{isDownloading ? (
-				<Loader2 className="w-4 h-4 animate-spin" />
+				<Loader2 className="w-4 h-4 animate-spin shrink-0" />
 			) : (
-				<Download className="w-4 h-4" />
+				<Download className="w-4 h-4 shrink-0" />
 			)}
-			{isDownloading ? 'Generating...' : 'Download PDF'}
+			<span className="max-w-0 group-hover:max-w-xs opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap overflow-hidden">
+				{isDownloading ? 'Generating...' : 'Download PDF'}
+			</span>
 		</button>
 	);
 }

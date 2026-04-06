@@ -42,7 +42,7 @@ export const ResumePreview = memo(function ResumePreview() {
 	return (
 		<div className="min-h-full p-6 flex justify-center relative" style={dotGridBg}>
 			{/* Floating download button */}
-			<div className="absolute top-4 right-4 z-10">
+			<div className="fixed top-4 right-4 z-10">
 				<DownloadButton />
 			</div>
 
