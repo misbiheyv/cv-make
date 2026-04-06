@@ -26,9 +26,12 @@ export function AddButton({
 				type="button"
 				onClick={onClick}
 				disabled={disabled}
-				className={`mt-2 text-sm text-gray-600 hover:text-black flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+				className={`mt-2 w-full py-2 text-xs text-[#999] border border-dashed border-[#ddd]
+				rounded-lg hover:border-[#bbb] hover:text-[#666] transition-colors
+				flex items-center justify-center gap-1
+				disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
 			>
-				<Plus className="w-4 h-4" /> {children}
+				<Plus className="w-3.5 h-3.5" /> {children}
 			</button>
 		);
 	}
@@ -38,7 +41,7 @@ export function AddButton({
 			type="button"
 			onClick={onClick}
 			disabled={disabled}
-			className={`btn-secondary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+			className={`btn-secondary disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
 		>
 			<Plus className="w-4 h-4" /> {children}
 		</button>

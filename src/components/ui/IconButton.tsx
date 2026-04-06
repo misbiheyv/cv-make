@@ -15,9 +15,9 @@ interface IconButtonProps {
 }
 
 const variantStyles: Record<IconButtonVariant, string> = {
-	danger: 'text-red-500 hover:text-red-700',
-	ghost: 'text-gray-400 hover:text-gray-700',
-	primary: 'text-gray-600 hover:text-black',
+	danger: 'text-[#ddd] hover:text-[#ef4444]',
+	ghost: 'text-[#ccc] hover:text-[#666]',
+	primary: 'text-[#888] hover:text-[#111]',
 };
 
 export function IconButton({
@@ -30,14 +30,15 @@ export function IconButton({
 	size = 'sm',
 }: IconButtonProps) {
 	const iconSize = size === 'sm' ? 'w-4 h-4' : 'w-5 h-5';
-	const padding = size === 'sm' ? 'p-2' : 'p-2.5';
+	const padding = size === 'sm' ? 'p-1.5' : 'p-2';
 
 	return (
 		<button
 			type="button"
 			onClick={onClick}
 			disabled={disabled}
-			className={`${variantStyles[variant]} ${padding} disabled:opacity-30 disabled:cursor-not-allowed ${className}`}
+			className={`${variantStyles[variant]} ${padding} rounded-md
+			transition-colors duration-150 disabled:opacity-30 disabled:cursor-not-allowed ${className}`}
 			title={title}
 		>
 			<Icon className={iconSize} />

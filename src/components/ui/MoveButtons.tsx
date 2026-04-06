@@ -19,16 +19,15 @@ export function MoveButtons({
 	size = 'sm',
 	className = '',
 }: MoveButtonsProps) {
-	const iconSize = size === 'sm' ? 'w-4 h-4' : 'w-5 h-5';
-	const padding = size === 'sm' ? 'p-1' : 'p-1.5';
+	const iconSize = size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4';
 
 	return (
-		<div className={`flex flex-col gap-0.5 ${className}`}>
+		<div className={`flex flex-col ${className}`}>
 			<button
 				type="button"
 				onClick={onMoveUp}
 				disabled={isFirst}
-				className={`text-gray-400 hover:text-gray-700 ${padding} disabled:opacity-30 disabled:cursor-not-allowed`}
+				className="text-[#ccc] hover:text-[#666] p-0.5 transition-colors duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
 				title="Move up"
 			>
 				<ChevronUp className={iconSize} />
@@ -37,7 +36,7 @@ export function MoveButtons({
 				type="button"
 				onClick={onMoveDown}
 				disabled={isLast}
-				className={`text-gray-400 hover:text-gray-700 ${padding} disabled:opacity-30 disabled:cursor-not-allowed`}
+				className="text-[#ccc] hover:text-[#666] p-0.5 transition-colors duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
 				title="Move down"
 			>
 				<ChevronDown className={iconSize} />
