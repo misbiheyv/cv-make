@@ -35,22 +35,22 @@ export function SectionCard({
 
 	return (
 		<div className={`section-card ${className}`}>
-			<div className="flex justify-between items-center mb-3">
+			<div className="section-card-header">
 				{collapsible ? (
 					<button
 						type="button"
 						onClick={() => setIsCollapsed(!isCollapsed)}
-						className="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+						className="flex items-center gap-2 text-xs font-semibold text-[#111] hover:text-[#333]"
 					>
 						<ChevronRight
-							className={`w-4 h-4 transition-transform ${isCollapsed ? '' : 'rotate-90'}`}
+							className={`w-3.5 h-3.5 transition-transform duration-150 ${isCollapsed ? '' : 'rotate-90'}`}
 						/>
 						<span>{title}</span>
 					</button>
 				) : (
-					<span className="text-sm font-medium text-gray-500">{title}</span>
+					<span className="text-xs font-semibold text-[#111]">{title}</span>
 				)}
-				<div className="flex gap-1 items-center">
+				<div className="flex items-center gap-0.5">
 					<MoveButtons
 						onMoveUp={onMoveUp}
 						onMoveDown={onMoveDown}
@@ -61,7 +61,9 @@ export function SectionCard({
 				</div>
 			</div>
 
-			{(!collapsible || !isCollapsed) && children}
+			{(!collapsible || !isCollapsed) && (
+				<div className="section-card-body">{children}</div>
+			)}
 		</div>
 	);
 }
