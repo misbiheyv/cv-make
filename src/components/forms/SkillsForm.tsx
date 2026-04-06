@@ -1,19 +1,14 @@
 'use client';
 
-import { Plus, X } from 'lucide-react';
-import { EmptyState, IconButton, MoveButtons } from '@/components/ui';
+import { X } from 'lucide-react';
+import { AddButton, EmptyState, IconButton, MoveButtons } from '@/components/ui';
 import { useResumeStore } from '@/store/useResumeStore';
 
 export function SkillsForm() {
 	const { skills, addSkill, updateSkill, removeSkill, moveSkill } = useResumeStore();
 
 	return (
-		<div className="space-y-4">
-			<button type="button" onClick={addSkill} className="btn-primary flex items-center gap-2">
-				<Plus className="w-4 h-4" />
-				Add Skill
-			</button>
-
+		<div className="space-y-3">
 			<div className="space-y-2">
 				{skills.map((skill, index) => (
 					<div key={skill.id} className="flex gap-2 items-center">
@@ -28,19 +23,19 @@ export function SkillsForm() {
 							className="form-input w-1/3"
 							value={skill.name}
 							onChange={(e) => updateSkill(skill.id, { name: e.target.value })}
-							placeholder="Skill name (e.g., Languages)"
+							placeholder="Skill name"
 						/>
 						<input
 							type="text"
 							className="form-input flex-1"
 							value={skill.description}
 							onChange={(e) => updateSkill(skill.id, { description: e.target.value })}
-							placeholder="Description (e.g., JavaScript, TypeScript)"
+							placeholder="Description"
 						/>
 						<IconButton
 							icon={X}
 							onClick={() => removeSkill(skill.id)}
-							variant="ghost"
+							variant="danger"
 							title="Delete"
 						/>
 					</div>
@@ -50,6 +45,8 @@ export function SkillsForm() {
 			<EmptyState show={skills.length === 0}>
 				No skills added yet. Add your technical and soft skills.
 			</EmptyState>
+
+			<AddButton onClick={addSkill}>Add Skill</AddButton>
 		</div>
 	);
 }
