@@ -1,7 +1,7 @@
 // CSS styles for resume template - preview and shared styles
 
-export const PAGE_PADDINGS_VERTICAL = '8mm';
-export const PAGE_PADDINGS_HORIZONTAL = '8mm';
+export const PAGE_PADDINGS_VERTICAL = "8mm";
+export const PAGE_PADDINGS_HORIZONTAL = "8mm";
 
 const fonts = `
 @font-face {

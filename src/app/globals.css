@@ -1,45 +1,45 @@
 @import "tailwindcss";
 
 @layer base {
-	html {
-		font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-	}
+    html {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
 
-	body {
-		@apply bg-gray-50 text-gray-900;
-	}
+    body {
+        @apply bg-gray-50 text-gray-900;
+    }
 
-	button {
-		@apply cursor-pointer;
-	}
+    button {
+        @apply cursor-pointer;
+    }
 }
 
 @layer components {
-	.form-input {
-		@apply w-full px-3.5 py-2.5 border border-[#e0e0e0] rounded-lg text-sm focus:outline-none focus:border-[#111] focus:shadow-[0_0_0_1px_#111] transition-colors duration-200 placeholder:text-[#aaa];
-	}
+    .form-input {
+        @apply w-full px-3.5 py-2.5 border border-[#e0e0e0] rounded-lg text-sm focus:outline-none focus:border-[#111] focus:shadow-[0_0_0_1px_#111] transition-colors duration-200 placeholder:text-[#aaa];
+    }
 
-	.form-label {
-		@apply block text-xs font-medium text-[#888] mb-1.5;
-	}
+    .form-label {
+        @apply block text-xs font-medium text-[#888] mb-1.5;
+    }
 
-	.btn-primary {
-		@apply px-5 py-2 bg-[#111] text-white rounded-lg hover:bg-[#333] transition-colors duration-200 font-medium shadow-sm;
-	}
+    .btn-primary {
+        @apply px-5 py-2 bg-[#111] text-white rounded-lg hover:bg-[#333] transition-colors duration-200 font-medium shadow-sm;
+    }
 
-	.btn-secondary {
-		@apply w-full py-2.5 bg-transparent text-[#999] border border-dashed border-[#ddd] rounded-[10px] hover:border-[#bbb] hover:text-[#666] transition-colors duration-200 flex items-center justify-center gap-2 text-sm;
-	}
+    .btn-secondary {
+        @apply w-full py-2.5 bg-transparent text-[#999] border border-dashed border-[#ddd] rounded-[10px] hover:border-[#bbb] hover:text-[#666] transition-colors duration-200 flex items-center justify-center gap-2 text-sm;
+    }
 
-	.section-card {
-		@apply bg-white rounded-[10px] border border-[#e5e5e5] mb-3 overflow-hidden;
-	}
+    .section-card {
+        @apply bg-white rounded-[10px] border border-[#e5e5e5] mb-3 overflow-hidden;
+    }
 
-	.section-card-header {
-		@apply px-3.5 py-2.5 bg-[#fafafa] border-b border-[#eee] flex justify-between items-center;
-	}
+    .section-card-header {
+        @apply px-3.5 py-2.5 bg-[#fafafa] border-b border-[#eee] flex justify-between items-center;
+    }
 
-	.section-card-body {
-		@apply p-3.5;
-	}
+    .section-card-body {
+        @apply p-3.5;
+    }
 }
