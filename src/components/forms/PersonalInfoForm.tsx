@@ -17,31 +17,33 @@ export function PersonalInfoForm() {
 				placeholder="John Doe"
 			/>
 
-			<FormField
-				label="Phone"
-				value={personalInfo.phone ?? ''}
-				onChange={(value) => updatePersonalInfo({ phone: value })}
-				placeholder="+1 (234) 567-8900"
-			/>
-
-			<FormField
-				label="City"
-				value={personalInfo.city ?? ''}
-				onChange={(value) => updatePersonalInfo({ city: value })}
-				placeholder="New York, NY"
-			/>
+			<div className="flex gap-3">
+				<FormField
+					label="Phone"
+					value={personalInfo.phone ?? ''}
+					onChange={(value) => updatePersonalInfo({ phone: value })}
+					placeholder="+1 (234) 567-8900"
+					className="flex-1"
+				/>
+				<FormField
+					label="City"
+					value={personalInfo.city ?? ''}
+					onChange={(value) => updatePersonalInfo({ city: value })}
+					placeholder="New York, NY"
+					className="flex-1"
+				/>
+			</div>
 
 			<div>
 				<span className="form-label">Links</span>
 				<div className="space-y-2">
 					{personalInfo.links.map((link, index) => (
-						<div key={index} className="flex gap-2 items-start">
+						<div key={index} className="flex gap-2 items-center">
 							<MoveButtons
 								onMoveUp={() => moveLink(index, 'up')}
 								onMoveDown={() => moveLink(index, 'down')}
 								isFirst={index === 0}
 								isLast={index === personalInfo.links.length - 1}
-								className="pt-2"
 							/>
 							<input
 								type="text"
@@ -55,7 +57,6 @@ export function PersonalInfoForm() {
 								onClick={() => removeLink(index)}
 								variant="danger"
 								title="Delete"
-								className="pt-3"
 							/>
 						</div>
 					))}
@@ -71,7 +72,7 @@ export function PersonalInfoForm() {
 				value={personalInfo.summary}
 				onChange={(value) => updatePersonalInfo({ summary: value })}
 				placeholder="A brief professional summary..."
-				minHeight="100px"
+				minHeight="80px"
 			/>
 		</div>
 	);
