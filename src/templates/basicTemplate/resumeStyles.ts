@@ -27,6 +27,14 @@ const fonts = `
 }`;
 
 export const styles = `
+h1, h2, h3, h4, h5, h6 {
+  font-size: inherit;
+  font-weight: inherit;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+}
+
 .resume-container * {
   margin: 0;
   padding: 0;
@@ -55,9 +63,7 @@ export const styles = `
 
 .resume-container .header {
   text-align: center;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #000;
-  padding-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .resume-container .name {
@@ -91,14 +97,18 @@ export const styles = `
 .resume-container .section-title {
   font-size: 12pt;
   font-variant: small-caps;
-  border-bottom: 1px solid #000;
+  border-bottom: 0.5px solid #000;
   margin: 0 0 4px 0;
   padding-bottom: 2px;
 }
 
+.resume-container .section-body {
+  margin: 0 0 0 12px;
+}
+
 .resume-container .experience-item,
 .resume-container .education-item {
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .resume-container .item-header {
@@ -125,22 +135,16 @@ export const styles = `
 }
 
 .resume-container .bullets {
+  line-height: 1.3;
   margin: 0 0 0 18px;
-  padding: 0;
+  padding: 0 0 0 10px;
 }
 
 .resume-container .bullets li {
-  margin-bottom: 1px;
-}
-
-.resume-container .bullets li::marker {
-  font-size: 0.6em;
+  margin-bottom: 2px;
 }
 
 .resume-container .skills-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 8px;
   font-size: 10pt;
 }
 

@@ -34,10 +34,16 @@ export const LanguageSchema = z.object({
 	level: z.string(),
 });
 
+export const SkillSchema = z.object({
+	id: z.string(),
+	name: z.string(),
+	description: z.string(),
+});
+
 export const ResumeDataSchema = z.object({
 	personalInfo: PersonalInfoSchema,
 	workExperience: z.array(WorkExperienceSchema),
 	education: z.array(EducationSchema),
-	skills: z.array(z.string()),
+	skills: z.array(SkillSchema),
 	languages: z.array(LanguageSchema),
 });

@@ -26,6 +26,12 @@ export interface Education {
 	description?: string;
 }
 
+export interface Skill {
+	id: string;
+	name: string;
+	description: string;
+}
+
 export interface Language {
 	id: string;
 	name: string;
@@ -36,7 +42,7 @@ export interface ResumeData {
 	personalInfo: PersonalInfo;
 	workExperience: WorkExperience[];
 	education: Education[];
-	skills: string[];
+	skills: Skill[];
 	languages: Language[];
 }
 

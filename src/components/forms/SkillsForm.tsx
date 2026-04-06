@@ -1,64 +1,45 @@
 'use client';
 
 import { Plus, X } from 'lucide-react';
-import { useState } from 'react';
 import { EmptyState, IconButton, MoveButtons } from '@/components/ui';
 import { useResumeStore } from '@/store/useResumeStore';
 
 export function SkillsForm() {
-	const { skills, addSkill, removeSkill, moveSkill } = useResumeStore();
-	const [newSkill, setNewSkill] = useState('');
-
-	const handleAddSkill = () => {
-		if (newSkill.trim()) {
-			addSkill(newSkill.trim());
-			setNewSkill('');
-		}
-	};
-
-	const handleKeyDown = (e: React.KeyboardEvent) => {
-		if (e.key === 'Enter') {
-			e.preventDefault();
-			handleAddSkill();
-		}
-	};
+	const { skills, addSkill, updateSkill, removeSkill, moveSkill } = useResumeStore();
 
 	return (
 		<div className="space-y-4">
-			<div className="flex gap-2">
-				<input
-					type="text"
-					className="form-input flex-1"
-					value={newSkill}
-					onChange={(e) => setNewSkill(e.target.value)}
-					onKeyDown={handleKeyDown}
-					placeholder="Add a skill (e.g., TypeScript, React)"
-				/>
-				<button
-					type="button"
-					onClick={handleAddSkill}
-					className="btn-primary px-3"
-					disabled={!newSkill.trim()}
-				>
-					<Plus className="w-4 h-4" />
-				</button>
-			</div>
+			<button type="button" onClick={addSkill} className="btn-primary flex items-center gap-2">
+				<Plus className="w-4 h-4" />
+				Add Skill
+			</button>
 
 			<div className="space-y-2">
 				{skills.map((skill, index) => (
-					<div key={index} className="flex gap-2 items-center">
+					<div key={skill.id} className="flex gap-2 items-center">
 						<MoveButtons
-							onMoveUp={() => moveSkill(index, 'up')}
-							onMoveDown={() => moveSkill(index, 'down')}
+							onMoveUp={() => moveSkill(skill.id, 'up')}
+							onMoveDown={() => moveSkill(skill.id, 'down')}
 							isFirst={index === 0}
 							isLast={index === skills.length - 1}
 						/>
-						<span className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm">
-							{skill}
-						</span>
+						<input
+							type="text"
+							className="form-input w-1/3"
+							value={skill.name}
+							onChange={(e) => updateSkill(skill.id, { name: e.target.value })}
+							placeholder="Skill name (e.g., Languages)"
+						/>
+						<input
+							type="text"
+							className="form-input flex-1"
+							value={skill.description}
+							onChange={(e) => updateSkill(skill.id, { description: e.target.value })}
+							placeholder="Description (e.g., JavaScript, TypeScript)"
+						/>
 						<IconButton
 							icon={X}
-							onClick={() => removeSkill(index)}
+							onClick={() => removeSkill(skill.id)}
 							variant="ghost"
 							title="Delete"
 						/>

@@ -28,40 +28,45 @@ export function ResumeTemplate({ data, showPlaceholders = false }: ResumeTemplat
 			{/* Summary */}
 			{personalInfo.summary && (
 				<section className="summary">
-					<p>{personalInfo.summary}</p>
+					<h2 className="section-title">Summary</h2>
+					<div className="section-body">
+						<p>{personalInfo.summary}</p>
+					</div>
 				</section>
 			)}
 
 			{/* Work Experience */}
 			{workExperience.length > 0 && (
 				<section className="section">
-					<h2 className="section-title">Work Experience</h2>
-					{workExperience.map((exp) => (
-						<div key={exp.id} className="experience-item">
-							<div className="item-header">
-								<span className="item-title">
-									{exp.title || (showPlaceholders ? 'Job Title' : '')}
-								</span>
-								<span className="item-date">
-									{exp.startDate || (showPlaceholders ? 'Start' : '')} -{' '}
-									{exp.endDate || (showPlaceholders ? 'End' : '')}
-								</span>
+					<h2 className="section-title">Experience</h2>
+					<div className="section-body">
+						{workExperience.map((exp) => (
+							<div key={exp.id} className="experience-item">
+								<div className="item-header">
+									<span className="item-title">
+										{exp.title || (showPlaceholders ? 'Job Title' : '')}
+									</span>
+									<span className="item-date">
+										{exp.startDate || (showPlaceholders ? 'Start' : '')} -{' '}
+										{exp.endDate || (showPlaceholders ? 'End' : '')}
+									</span>
+								</div>
+								<div className="item-subtitle">
+									<span>{exp.company || (showPlaceholders ? 'Company' : '')}</span>
+									<span>{exp.location}</span>
+								</div>
+								{exp.bullets.filter((b) => b.trim()).length > 0 && (
+									<ul className="bullets">
+										{exp.bullets
+											.filter((b) => b.trim())
+											.map((bullet, i) => (
+												<li key={i}>{bullet}</li>
+											))}
+									</ul>
+								)}
 							</div>
-							<div className="item-subtitle">
-								<span>{exp.company || (showPlaceholders ? 'Company' : '')}</span>
-								<span>{exp.location}</span>
-							</div>
-							{exp.bullets.filter((b) => b.trim()).length > 0 && (
-								<ul className="bullets">
-									{exp.bullets
-										.filter((b) => b.trim())
-										.map((bullet, i) => (
-											<li key={i}>{bullet}</li>
-										))}
-								</ul>
-							)}
-						</div>
-					))}
+						))}
+					</div>
 				</section>
 			)}
 
@@ -69,37 +74,41 @@ export function ResumeTemplate({ data, showPlaceholders = false }: ResumeTemplat
 			{education.length > 0 && (
 				<section className="section">
 					<h2 className="section-title">Education</h2>
-					{education.map((edu) => (
-						<div key={edu.id} className="education-item">
-							<div className="item-header">
-								<span className="item-title">
-									{edu.institution || (showPlaceholders ? 'Institution' : '')}
-								</span>
-								<span className="item-date">{edu.location}</span>
+					<div className="section-body">
+						{education.map((edu) => (
+							<div key={edu.id} className="education-item">
+								<div className="item-header">
+									<span className="item-title">
+										{edu.institution || (showPlaceholders ? 'Institution' : '')}
+									</span>
+									<span className="item-date">{edu.location}</span>
+								</div>
+								<div className="item-subtitle">
+									<span>{edu.degree || (showPlaceholders ? 'Degree' : '')}</span>
+									<span>
+										{edu.startDate || (showPlaceholders ? 'Start' : '')} -{' '}
+										{edu.endDate || (showPlaceholders ? 'End' : '')}
+									</span>
+								</div>
+								{edu.description && <p>{edu.description}</p>}
 							</div>
-							<div className="item-subtitle">
-								<span>{edu.degree || (showPlaceholders ? 'Degree' : '')}</span>
-								<span>
-									{edu.startDate || (showPlaceholders ? 'Start' : '')} -{' '}
-									{edu.endDate || (showPlaceholders ? 'End' : '')}
-								</span>
-							</div>
-							{edu.description && <p>{edu.description}</p>}
-						</div>
-					))}
+						))}
+					</div>
 				</section>
 			)}
 
 			{/* Skills */}
 			{skills.length > 0 && (
 				<section className="section">
-					<h2 className="section-title">Skills</h2>
-					<div className="skills-list">
-						{skills.map((skill, i) => (
-							<span key={i} className="skill-item">
-								{skill}
-							</span>
-						))}
+					<h2 className="section-title">Technical skills</h2>
+					<div className="section-body">
+						<div className="skills-list">
+							{skills.map((skill) => (
+								<div key={skill.id} className="skill-item">
+									<b>{skill.name}</b>: {skill.description}
+								</div>
+							))}
+						</div>
 					</div>
 				</section>
 			)}
@@ -108,11 +117,16 @@ export function ResumeTemplate({ data, showPlaceholders = false }: ResumeTemplat
 			{languages.length > 0 && (
 				<section className="section">
 					<h2 className="section-title">Languages</h2>
-					<div className="languages-list">
-						{languages
-							.filter((l) => l.name)
-							.map((lang) => `${lang.name}: ${lang.level ? `${lang.level}` : ''}`)
-							.join(', ')}
+					<div className="section-body">
+						<div className="languages-list">
+							{languages
+								.filter((l) => l.name)
+								.map((lang) => (
+									<div key={lang.id}>
+										<b>{lang.name}</b>: {lang.level}
+									</div>
+								))}
+						</div>
 					</div>
 				</section>
 			)}

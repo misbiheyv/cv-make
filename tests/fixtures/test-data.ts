@@ -35,7 +35,11 @@ export const VALID_RESUME_DATA = {
       description: 'Focus on distributed systems and algorithms.',
     },
   ],
-  skills: ['JavaScript/TypeScript', 'React/Next.js', 'Node.js/Express'],
+  skills: [
+    { id: 'skill1', name: 'Languages', description: 'JavaScript, TypeScript, Python' },
+    { id: 'skill2', name: 'Frameworks', description: 'React, Next.js, Express' },
+    { id: 'skill3', name: 'Tools', description: 'Git, Docker, AWS' },
+  ],
   languages: [
     { id: 'lang1', name: 'English', level: 'Native' },
     { id: 'lang2', name: 'Spanish', level: 'Intermediate' },

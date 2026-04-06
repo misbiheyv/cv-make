@@ -62,3 +62,4 @@ logs
 # temporary files
 tmp/
 temp/
+docs/superpowers/specs/2026-04-05-server-setup-design.md

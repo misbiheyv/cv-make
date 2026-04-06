@@ -1,6 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Education, Language, PersonalInfo, ResumeData, WorkExperience } from '@/types/resume';
+import type {
+	Education,
+	Language,
+	PersonalInfo,
+	ResumeData,
+	Skill,
+	WorkExperience,
+} from '@/types/resume';
 import { createEmptyResumeData, generateId } from '@/types/resume';
 
 interface ResumeStore extends ResumeData {
@@ -28,9 +35,10 @@ interface ResumeStore extends ResumeData {
 	moveEducation: (id: string, direction: 'up' | 'down') => void;
 
 	// Skills actions
-	addSkill: (skill: string) => void;
-	removeSkill: (index: number) => void;
-	moveSkill: (index: number, direction: 'up' | 'down') => void;
+	addSkill: () => void;
+	updateSkill: (id: string, data: Partial<Skill>) => void;
+	removeSkill: (id: string) => void;
+	moveSkill: (id: string, direction: 'up' | 'down') => void;
 
 	// Languages actions
 	addLanguage: () => void;
@@ -229,18 +237,26 @@ export const useResumeStore = create<ResumeStore>()(
 				}),
 
 			// Skills
-			addSkill: (skill) =>
+			addSkill: () =>
 				set((state) => ({
-					skills: [...state.skills, skill],
+					skills: [...state.skills, { id: generateId(), name: '', description: '' }],
 				})),
 
-			removeSkill: (index) =>
+			updateSkill: (id, data) =>
 				set((state) => ({
-					skills: state.skills.filter((_, i) => i !== index),
+					skills: state.skills.map((skill) => (skill.id === id ? { ...skill, ...data } : skill)),
 				})),
 
-			moveSkill: (index, direction) =>
+			removeSkill: (id) =>
+				set((state) => ({
+					skills: state.skills.filter((skill) => skill.id !== id),
+				})),
+
+			moveSkill: (id, direction) =>
 				set((state) => {
+					const index = state.skills.findIndex((skill) => skill.id === id);
+					if (index === -1) return state;
+
 					const newIndex = direction === 'up' ? index - 1 : index + 1;
 					if (newIndex < 0 || newIndex >= state.skills.length) return state;
 
