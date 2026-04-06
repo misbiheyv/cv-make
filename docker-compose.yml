@@ -33,7 +33,7 @@ services:
     volumes:
       - ${NGINX_CONFIG_PATH:-./nginx/nginx.conf}:/etc/nginx/templates/default.conf.template:ro
       - ./nginx/upstream.conf:/etc/nginx/conf.d/upstream.conf
-      - ${SSL_CERT_PATH:-/etc/letsencrypt}:/etc/letsencrypt:ro
+      - ${SSL_CERT_PATH:-/etc/ssl/cloudflare}:/etc/ssl/cloudflare:ro
     environment:
       - RATE_LIMIT=${RATE_LIMIT}
       - RATE_BURST=${RATE_BURST}
