@@ -125,39 +125,25 @@ Toast notifications using shadcn's Sonner integration, floating over the preview
   - Generic error: Red theme with alert icon
 - **Dismissible:** × button on each toast
 
-## Component Library: shadcn/ui
+## Components: No Library, Restyle Existing
 
-### Components to Install
+No external UI component library. The app's custom components are simple and purpose-built — restyling them is less work than migrating to a library.
 
-- `input` — form text inputs
-- `textarea` — form textareas
-- `button` — all buttons (download, add, delete, move)
-- `tabs` — section navigation in sidebar
-- `sonner` — toast notifications
+### New Dependency
 
-### Theme Customization
+- `sonner` — standalone toast notification package. No shadcn wrapper needed.
 
-Override shadcn CSS variables to match the design:
-- `--radius: 0.5rem` (8px border radius)
-- `--primary: #111` (near-black)
-- `--primary-foreground: #fff`
-- `--muted: #f5f5f5`
-- `--muted-foreground: #666`
-- `--border: #e0e0e0`
-- `--input: #e0e0e0`
-- `--ring: #111`
+### Component Changes
 
-### Migration Strategy
-
-Replace custom UI components one-by-one with shadcn equivalents:
-- `FormField` → shadcn `Input` / `Textarea` + custom `Label`
-- `Accordion` → removed (replaced by `Tabs`)
-- `AddButton` → shadcn `Button` with `variant="outline"` + dashed border class
-- `IconButton` → shadcn `Button` with `variant="ghost"` + `size="icon"`
-- `MoveButtons` → keep custom (thin wrapper around two shadcn icon buttons)
-- `SectionCard` → keep custom (shadcn doesn't have a direct equivalent)
-- `ReorderableList` → keep custom
-- `EmptyState` → keep custom (simple component)
+- `FormField` → restyle with new border, radius, padding, focus ring
+- `Accordion` → **remove**, replace with new custom `SectionTabs` pill-tab component
+- `AddButton` → restyle with dashed border variant
+- `IconButton` → restyle with updated ghost/danger variants
+- `MoveButtons` → restyle (smaller, subtler)
+- `SectionCard` → restyle with updated header/border treatment
+- `ReorderableList` → keep as-is
+- `EmptyState` → keep as-is
+- **New:** `SectionTabs` — simple pill-tab switcher (~30 lines), manages active section state
 
 ## What Does NOT Change
 
