@@ -6,11 +6,28 @@ import { LanguagesForm } from './forms/LanguagesForm';
 import { PersonalInfoForm } from './forms/PersonalInfoForm';
 import { SkillsForm } from './forms/SkillsForm';
 import { WorkExperienceForm } from './forms/WorkExperienceForm';
-import { Accordion } from './ui/Accordion';
+import { SectionTabs } from './ui/SectionTabs';
+
+const TABS = [
+	{ id: 'personal', label: 'Personal' },
+	{ id: 'experience', label: 'Experience' },
+	{ id: 'education', label: 'Education' },
+	{ id: 'skills', label: 'Skills' },
+	{ id: 'languages', label: 'Languages' },
+];
+
+const TAB_CONTENT: Record<string, React.ReactNode> = {
+	personal: <PersonalInfoForm />,
+	experience: <WorkExperienceForm />,
+	education: <EducationForm />,
+	skills: <SkillsForm />,
+	languages: <LanguagesForm />,
+};
 
 export function Sidebar() {
 	const [width, setWidth] = useState(550);
 	const [isResizing, setIsResizing] = useState(false);
+	const [activeTab, setActiveTab] = useState('personal');
 	const sidebarRef = useRef<HTMLDivElement>(null);
 
 	const startResizing = () => {
@@ -48,35 +65,24 @@ export function Sidebar() {
 		<aside
 			ref={sidebarRef}
 			style={{ width: `${width}px`, minWidth: `${width}px` }}
-			className="h-screen overflow-y-auto border-r border-gray-200 bg-white relative"
+			className="h-screen flex flex-col border-r border-[#e5e5e5] bg-white relative"
 		>
-			<div className="sticky top-0 bg-white border-b border-gray-300 p-4 z-10 shadow-sm">
-				<h1 className="text-xl font-bold flex items-center gap-2">
-					<span className="text-2xl">📄</span>
-					CV Make
-				</h1>
+			{/* Header */}
+			<div className="px-5 py-4 border-b border-[#f0f0f0]">
+				<div className="flex items-center gap-2">
+					<div className="w-6 h-6 bg-[#111] rounded-md flex items-center justify-center">
+						<span className="text-white text-[10px] font-bold">CV</span>
+					</div>
+					<span className="text-[15px] font-bold text-[#111] tracking-tight">CV Make</span>
+				</div>
 			</div>
 
-			<div>
-				<Accordion title="Main Information" defaultOpen={true}>
-					<PersonalInfoForm />
-				</Accordion>
+			{/* Tab navigation */}
+			<SectionTabs tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
 
-				<Accordion title="Work Experience">
-					<WorkExperienceForm />
-				</Accordion>
-
-				<Accordion title="Education">
-					<EducationForm />
-				</Accordion>
-
-				<Accordion title="Skills">
-					<SkillsForm />
-				</Accordion>
-
-				<Accordion title="Languages">
-					<LanguagesForm />
-				</Accordion>
+			{/* Form content */}
+			<div className="flex-1 overflow-y-auto px-5 py-4">
+				{TAB_CONTENT[activeTab]}
 			</div>
 
 			{/* Resize Handle */}
