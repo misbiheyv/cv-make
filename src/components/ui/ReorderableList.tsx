@@ -1,6 +1,6 @@
 'use client';
 
-import { Trash2 } from 'lucide-react';
+import { X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { IconButton } from './IconButton';
 import { MoveButtons } from './MoveButtons';
@@ -31,22 +31,20 @@ export function ReorderableList<T extends ReorderableListItem>({
 	return (
 		<div className={`space-y-2 ${className}`}>
 			{items.map((item, index) => (
-				<div key={item.id} className={`flex gap-2 items-start ${itemClassName}`}>
+				<div key={item.id} className={`flex gap-2 items-center ${itemClassName}`}>
 					<MoveButtons
 						onMoveUp={() => onMove(item.id, 'up')}
 						onMoveDown={() => onMove(item.id, 'down')}
 						isFirst={index === 0}
 						isLast={index === items.length - 1}
-						className="pt-2"
 					/>
 					<div className="flex-1">{renderItem(item, index)}</div>
 					<IconButton
-						icon={Trash2}
+						icon={X}
 						onClick={() => onRemove(item.id)}
 						variant="danger"
 						title="Delete"
 						disabled={!canRemove(item, index)}
-						className="pt-3"
 					/>
 				</div>
 			))}

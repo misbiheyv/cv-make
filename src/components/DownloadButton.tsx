@@ -30,10 +30,7 @@ export function DownloadButton() {
 				}
 
 				if (response.status === 429) {
-					const retryAfter = parseInt(
-						response.headers.get('retry-after') || '0',
-						10,
-					);
+					const retryAfter = parseInt(response.headers.get('retry-after') || '0', 10);
 					toast.warning(
 						errorData.message || 'Too many requests. Please wait before trying again.',
 						{

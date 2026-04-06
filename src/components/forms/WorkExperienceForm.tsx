@@ -1,7 +1,6 @@
 'use client';
 
-import { X } from 'lucide-react';
-import { AddButton, IconButton, MoveButtons, SectionCard } from '@/components/ui';
+import { AddButton, ReorderableList, ReorderableSectionsList } from '@/components/ui';
 import { useResumeStore } from '@/store/useResumeStore';
 
 export function WorkExperienceForm() {
@@ -19,25 +18,21 @@ export function WorkExperienceForm() {
 
 	return (
 		<div className="space-y-4">
-			{workExperience.map((exp, index) => (
-				<SectionCard
-					key={exp.id}
-					title={
-						exp.title && exp.company ? (
-							<span className="text-gray-400">
-								{exp.title} @ {exp.company}
-							</span>
-						) : (
-							`Experience #${index + 1}`
-						)
-					}
-					onMoveUp={() => moveWorkExperience(exp.id, 'up')}
-					onMoveDown={() => moveWorkExperience(exp.id, 'down')}
-					onDelete={() => removeWorkExperience(exp.id)}
-					isFirst={index === 0}
-					isLast={index === workExperience.length - 1}
-					collapsible
-				>
+			<ReorderableSectionsList
+				items={workExperience}
+				onMove={(id, dir) => moveWorkExperience(id, dir)}
+				onRemove={(id) => removeWorkExperience(id)}
+				collapsible
+				renderTitle={(exp, index) =>
+					exp.title && exp.company ? (
+						<span className="text-gray-400">
+							{exp.title} @ {exp.company}
+						</span>
+					) : (
+						`Experience #${index + 1}`
+					)
+				}
+				renderContent={(exp) => (
 					<div className="space-y-3">
 						<div className="grid grid-cols-2 gap-3">
 							<div>
@@ -91,40 +86,27 @@ export function WorkExperienceForm() {
 						</div>
 
 						<div>
-							<div className="space-y-2">
-								{exp.bullets.map((bullet, bulletIndex) => (
-									<div key={bulletIndex} className="flex gap-2">
-										<MoveButtons
-											onMoveUp={() => moveBullet(exp.id, bulletIndex, 'up')}
-											onMoveDown={() => moveBullet(exp.id, bulletIndex, 'down')}
-											isFirst={bulletIndex === 0}
-											isLast={bulletIndex === exp.bullets.length - 1}
-											className="pt-2"
-										/>
-										<textarea
-											className="form-input flex-1 min-h-[80px] resize-y"
-											value={bullet}
-											onChange={(e) => updateBullet(exp.id, bulletIndex, e.target.value)}
-											placeholder="Describe your achievement..."
-										/>
-										<IconButton
-											icon={X}
-											onClick={() => removeBullet(exp.id, bulletIndex)}
-											variant="ghost"
-											title="Delete"
-											disabled={exp.bullets.length <= 1}
-											className="pt-3"
-										/>
-									</div>
-								))}
-							</div>
+							<ReorderableList
+								items={exp.bullets.map((text, i) => ({ id: String(i), text }))}
+								onMove={(id, dir) => moveBullet(exp.id, Number(id), dir)}
+								onRemove={(id) => removeBullet(exp.id, Number(id))}
+								canRemove={() => exp.bullets.length > 1}
+								renderItem={(item) => (
+									<textarea
+										className="form-input w-full min-h-[80px] resize-y"
+										value={item.text}
+										onChange={(e) => updateBullet(exp.id, Number(item.id), e.target.value)}
+										placeholder="Describe your achievement..."
+									/>
+								)}
+							/>
 							<AddButton onClick={() => addBullet(exp.id)} variant="inline">
 								Add bullet
 							</AddButton>
 						</div>
 					</div>
-				</SectionCard>
-			))}
+				)}
+			/>
 
 			<AddButton onClick={addWorkExperience}>Add Experience</AddButton>
 		</div>

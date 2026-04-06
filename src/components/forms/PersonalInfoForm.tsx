@@ -1,7 +1,6 @@
 'use client';
 
-import { Trash2 } from 'lucide-react';
-import { AddButton, FormField, IconButton, MoveButtons } from '@/components/ui';
+import { AddButton, FormField, ReorderableList } from '@/components/ui';
 import { useResumeStore } from '@/store/useResumeStore';
 
 export function PersonalInfoForm() {
@@ -36,31 +35,20 @@ export function PersonalInfoForm() {
 
 			<div>
 				<span className="form-label">Links</span>
-				<div className="space-y-2">
-					{personalInfo.links.map((link, index) => (
-						<div key={index} className="flex gap-2 items-center">
-							<MoveButtons
-								onMoveUp={() => moveLink(index, 'up')}
-								onMoveDown={() => moveLink(index, 'down')}
-								isFirst={index === 0}
-								isLast={index === personalInfo.links.length - 1}
-							/>
-							<input
-								type="text"
-								className="form-input flex-1"
-								value={link}
-								onChange={(e) => updateLink(index, e.target.value)}
-								placeholder="https://linkedin.com/in/username"
-							/>
-							<IconButton
-								icon={Trash2}
-								onClick={() => removeLink(index)}
-								variant="danger"
-								title="Delete"
-							/>
-						</div>
-					))}
-				</div>
+				<ReorderableList
+					items={personalInfo.links.map((url, i) => ({ id: String(i), url }))}
+					onMove={(id, dir) => moveLink(Number(id), dir)}
+					onRemove={(id) => removeLink(Number(id))}
+					renderItem={(item) => (
+						<input
+							type="text"
+							className="form-input w-full"
+							value={item.url}
+							onChange={(e) => updateLink(Number(item.id), e.target.value)}
+							placeholder="https://linkedin.com/in/username"
+						/>
+					)}
+				/>
 				<AddButton onClick={addLink} variant="inline">
 					Add link
 				</AddButton>

@@ -81,9 +81,7 @@ export function Sidebar() {
 			<SectionTabs tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
 
 			{/* Form content */}
-			<div className="flex-1 overflow-y-auto px-5 py-4">
-				{TAB_CONTENT[activeTab]}
-			</div>
+			<div className="flex-1 overflow-y-auto px-5 py-4">{TAB_CONTENT[activeTab]}</div>
 
 			{/* Resize Handle */}
 			{/* biome-ignore lint/a11y/useSemanticElements: resize handle requires custom div */}

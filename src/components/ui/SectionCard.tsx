@@ -3,7 +3,7 @@
 import { ChevronRight, Trash2 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
-import { IconButton } from './IconButton';
+import { IconButton, variantStyles } from './IconButton';
 import { MoveButtons } from './MoveButtons';
 
 interface SectionCardProps {
@@ -40,7 +40,7 @@ export function SectionCard({
 					<button
 						type="button"
 						onClick={() => setIsCollapsed(!isCollapsed)}
-						className="flex items-center gap-2 text-xs font-semibold text-[#111] hover:text-[#333]"
+						className={`flex items-center gap-2 text-xs font-semibold text-[#111] hover:text-[#333] text-left min-w-0 ${variantStyles.ghost}`}
 					>
 						<ChevronRight
 							className={`w-3.5 h-3.5 transition-transform duration-150 ${isCollapsed ? '' : 'rotate-90'}`}
@@ -57,13 +57,12 @@ export function SectionCard({
 						isFirst={isFirst}
 						isLast={isLast}
 					/>
+					<div className="w-px h-4 bg-[#e5e5e5] mx-1.5" />
 					<IconButton icon={Trash2} onClick={onDelete} variant="danger" title="Delete" />
 				</div>
 			</div>
 
-			{(!collapsible || !isCollapsed) && (
-				<div className="section-card-body">{children}</div>
-			)}
+			{(!collapsible || !isCollapsed) && <div className="section-card-body">{children}</div>}
 		</div>
 	);
 }

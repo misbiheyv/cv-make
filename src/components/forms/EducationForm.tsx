@@ -1,6 +1,6 @@
 'use client';
 
-import { AddButton, SectionCard } from '@/components/ui';
+import { AddButton, ReorderableSectionsList } from '@/components/ui';
 import { useResumeStore } from '@/store/useResumeStore';
 
 export function EducationForm() {
@@ -9,16 +9,12 @@ export function EducationForm() {
 
 	return (
 		<div className="space-y-4">
-			{education.map((edu, index) => (
-				<SectionCard
-					key={edu.id}
-					title={`Education #${index + 1}`}
-					onMoveUp={() => moveEducation(edu.id, 'up')}
-					onMoveDown={() => moveEducation(edu.id, 'down')}
-					onDelete={() => removeEducation(edu.id)}
-					isFirst={index === 0}
-					isLast={index === education.length - 1}
-				>
+			<ReorderableSectionsList
+				items={education}
+				onMove={(id, dir) => moveEducation(id, dir)}
+				onRemove={(id) => removeEducation(id)}
+				renderTitle={(_edu, index) => <span className="text-gray-400">Education #{index + 1}</span>}
+				renderContent={(edu) => (
 					<div className="space-y-3">
 						<div className="grid grid-cols-2 gap-3">
 							<div>
@@ -80,8 +76,8 @@ export function EducationForm() {
 							/>
 						</div>
 					</div>
-				</SectionCard>
-			))}
+				)}
+			/>
 
 			<AddButton onClick={addEducation}>Add Education</AddButton>
 		</div>

@@ -6,7 +6,7 @@ type IconButtonVariant = 'danger' | 'ghost' | 'primary';
 
 interface IconButtonProps {
 	icon: LucideIcon;
-	onClick: () => void;
+	onClick?: () => void;
 	variant?: IconButtonVariant;
 	title?: string;
 	disabled?: boolean;
@@ -14,7 +14,7 @@ interface IconButtonProps {
 	size?: 'sm' | 'md';
 }
 
-const variantStyles: Record<IconButtonVariant, string> = {
+export const variantStyles: Record<IconButtonVariant, string> = {
 	danger: 'text-[#ddd] hover:text-[#ef4444]',
 	ghost: 'text-[#ccc] hover:text-[#666]',
 	primary: 'text-[#888] hover:text-[#111]',
