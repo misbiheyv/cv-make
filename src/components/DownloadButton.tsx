@@ -29,6 +29,10 @@ export function DownloadButton() {
                     errorData = await response.json();
                 }
 
+                if (typeof gtag !== "undefined") {
+                    gtag("event", "pdf_download_error", {event_category: "error"});
+                }
+
                 if (response.status === 429) {
                     const retryAfter = parseInt(response.headers.get("retry-after") || "0", 10);
                     toast.warning(
@@ -66,8 +70,17 @@ export function DownloadButton() {
             a.click();
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
+
+            if (typeof gtag !== "undefined") {
+                gtag("event", "pdf_download", {event_category: "conversion"});
+            }
         } catch (error) {
             console.error("Download error:", error);
+
+            if (typeof gtag !== "undefined") {
+                gtag("event", "pdf_download_error", {event_category: "error"});
+            }
+
             toast.error("Network error. Please check your connection and try again.");
         } finally {
             setIsDownloading(false);
