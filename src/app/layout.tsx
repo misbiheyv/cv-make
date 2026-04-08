@@ -1,5 +1,6 @@
 import type {Metadata} from "next";
 import {Toaster} from "sonner";
+import {GoogleAnalytics} from "@/components/GoogleAnalytics";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -40,12 +41,16 @@ export const metadata: Metadata = {
     icons: {
         icon: [{url: "/favicon.svg", type: "image/svg+xml"}],
     },
+    verification: {
+        google: process.env.NEXT_PUBLIC_GSC_VERIFICATION,
+    },
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
     return (
         <html lang="en">
             <body className="antialiased">
+                <GoogleAnalytics />
                 <script type="application/ld+json">
                     {JSON.stringify({
                         "@context": "https://schema.org",
