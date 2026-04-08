@@ -1,8 +1,52 @@
 @import "tailwindcss";
 
+@theme {
+    /* Primary */
+    --color-primary: #111111;
+    --color-primary-hover: #333333;
+
+    /* Text */
+    --color-text-secondary: #555555;
+    --color-text-tertiary: #777777;
+    --color-text-label: #666666;
+    --color-text-placeholder: #999999;
+
+    /* Icons */
+    --color-icon-default: #999999;
+    --color-icon-hover: #555555;
+    --color-icon-muted: #bbbbbb;
+
+    /* Borders */
+    --color-border: #e5e5e5;
+    --color-border-input: #e0e0e0;
+    --color-border-light: #eeeeee;
+    --color-border-hover: #bbbbbb;
+    --color-border-header: #f0f0f0;
+
+    /* Surfaces */
+    --color-surface: #fafafa;
+    --color-surface-hover: #eeeeee;
+    --color-surface-muted: #f5f5f5;
+
+    /* Semantic */
+    --color-danger: #ef4444;
+}
+
+@utility scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
 @layer base {
     html {
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    textarea {
+        @apply field-sizing-content scrollbar-none;
     }
 
     body {
@@ -16,27 +60,27 @@
 
 @layer components {
     .form-input {
-        @apply w-full px-3.5 py-2.5 border border-[#e0e0e0] rounded-lg text-sm focus:outline-none focus:border-[#111] focus:shadow-[0_0_0_1px_#111] transition-colors duration-200 placeholder:text-[#aaa];
+        @apply w-full px-3.5 py-2.5 border border-border-input rounded-lg text-sm focus:outline-none focus:border-primary focus:shadow-[0_0_0_1px_var(--color-primary)] transition-colors duration-200 placeholder:text-text-placeholder;
     }
 
     .form-label {
-        @apply block text-xs font-medium text-[#888] mb-1.5;
+        @apply block text-xs font-medium text-text-label mb-1.5;
     }
 
     .btn-primary {
-        @apply px-5 py-2 bg-[#111] text-white rounded-lg hover:bg-[#333] transition-colors duration-200 font-medium shadow-sm;
+        @apply px-5 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors duration-200 font-medium shadow-sm;
     }
 
     .btn-secondary {
-        @apply w-full py-2.5 bg-transparent text-[#999] border border-dashed border-[#ddd] rounded-[10px] hover:border-[#bbb] hover:text-[#666] transition-colors duration-200 flex items-center justify-center gap-2 text-sm;
+        @apply w-full py-2.5 bg-transparent text-text-tertiary border border-dashed border-border rounded-[10px] hover:border-border-hover hover:text-text-secondary transition-colors duration-200 flex items-center justify-center gap-2 text-sm;
     }
 
     .section-card {
-        @apply bg-white rounded-[10px] border border-[#e5e5e5] mb-3 overflow-hidden;
+        @apply bg-white rounded-[10px] border border-border mb-3 overflow-hidden;
     }
 
     .section-card-header {
-        @apply px-3.5 py-2.5 bg-[#fafafa] border-b border-[#eee] flex justify-between items-center;
+        @apply px-3.5 py-2.5 bg-surface border-b border-border-light flex justify-between items-center;
     }
 
     .section-card-body {

@@ -34,9 +34,7 @@ export function SkillsForm() {
 
             <AddButton onClick={addSkill}>Add Skill</AddButton>
 
-            <EmptyState show={skills.length === 0}>
-                No skills added yet. Add your technical and soft skills.
-            </EmptyState>
+            <EmptyState show={skills.length === 0}>No skills added yet</EmptyState>
         </div>
     );
 }

@@ -38,7 +38,7 @@ export function LanguagesForm() {
 
             <AddButton onClick={addLanguage}>Add Language</AddButton>
 
-            <EmptyState show={languages.length === 0}>No languages added yet.</EmptyState>
+            <EmptyState show={languages.length === 0}>No languages added yet</EmptyState>
         </div>
     );
 }

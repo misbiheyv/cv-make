@@ -40,7 +40,7 @@ export function SectionCard({
                     <button
                         type="button"
                         onClick={() => setIsCollapsed(!isCollapsed)}
-                        className={`flex items-center gap-2 text-xs font-semibold text-[#111] hover:text-[#333] text-left min-w-0 ${variantStyles.ghost}`}
+                        className={`flex items-center gap-2 text-xs font-semibold text-primary hover:text-primary-hover text-left min-w-0 ${variantStyles.ghost}`}
                     >
                         <ChevronRight
                             className={`w-3.5 h-3.5 transition-transform duration-150 ${isCollapsed ? "" : "rotate-90"}`}
@@ -48,7 +48,7 @@ export function SectionCard({
                         <span>{title}</span>
                     </button>
                 ) : (
-                    <span className="text-xs font-semibold text-[#111]">{title}</span>
+                    <span className="text-xs font-semibold text-primary">{title}</span>
                 )}
                 <div className="flex items-center gap-0.5">
                     <MoveButtons
@@ -57,7 +57,7 @@ export function SectionCard({
                         isFirst={isFirst}
                         isLast={isLast}
                     />
-                    <div className="w-px h-4 bg-[#e5e5e5] mx-1.5" />
+                    <div className="w-px h-4 bg-border mx-1.5" />
                     <IconButton icon={Trash2} onClick={onDelete} variant="danger" title="Delete" />
                 </div>
             </div>

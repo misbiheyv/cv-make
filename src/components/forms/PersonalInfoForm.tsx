@@ -25,7 +25,7 @@ export function PersonalInfoForm() {
                     className="flex-1"
                 />
                 <FormField
-                    label="City"
+                    label="Location"
                     value={personalInfo.city ?? ""}
                     onChange={(value) => updatePersonalInfo({city: value})}
                     placeholder="New York, NY"
@@ -45,7 +45,7 @@ export function PersonalInfoForm() {
                             className="form-input w-full"
                             value={item.url}
                             onChange={(e) => updateLink(Number(item.id), e.target.value)}
-                            placeholder="https://linkedin.com/in/username"
+                            placeholder="linkedin.com/in/username"
                         />
                     )}
                 />

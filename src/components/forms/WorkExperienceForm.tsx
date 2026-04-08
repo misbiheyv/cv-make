@@ -1,6 +1,6 @@
 "use client";
 
-import {AddButton, ReorderableList, ReorderableSectionsList} from "@/components/ui";
+import {AddButton, EmptyState, ReorderableList, ReorderableSectionsList} from "@/components/ui";
 import {useResumeStore} from "@/store/useResumeStore";
 
 export function WorkExperienceForm() {
@@ -23,15 +23,13 @@ export function WorkExperienceForm() {
                 onMove={(id, dir) => moveWorkExperience(id, dir)}
                 onRemove={(id) => removeWorkExperience(id)}
                 collapsible
-                renderTitle={(exp, index) =>
-                    exp.title && exp.company ? (
-                        <span className="text-gray-400">
-                            {exp.title} @ {exp.company}
-                        </span>
-                    ) : (
-                        `Experience #${index + 1}`
-                    )
-                }
+                renderTitle={(exp, index) => (
+                    <span className="text-text-tertiary">
+                        {exp.title && exp.company
+                            ? `${exp.title} @ ${exp.company}`
+                            : `Experience #${index + 1}`}
+                    </span>
+                )}
                 renderContent={(exp) => (
                     <div className="space-y-3">
                         <div className="grid grid-cols-2 gap-3">
@@ -121,6 +119,8 @@ export function WorkExperienceForm() {
             />
 
             <AddButton onClick={addWorkExperience}>Add Experience</AddButton>
+
+            <EmptyState show={workExperience.length === 0}>No experience added yet</EmptyState>
         </div>
     );
 }

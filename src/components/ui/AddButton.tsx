@@ -26,8 +26,8 @@ export function AddButton({
                 type="button"
                 onClick={onClick}
                 disabled={disabled}
-                className={`mt-2 w-full py-2 text-xs text-[#999] border border-dashed border-[#ddd]
-				rounded-lg hover:border-[#bbb] hover:text-[#666] transition-colors
+                className={`mt-2 w-full py-2 text-xs text-text-tertiary border border-dashed border-border
+				rounded-lg hover:border-border-hover hover:text-text-secondary transition-colors
 				flex items-center justify-center gap-1
 				disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
             >

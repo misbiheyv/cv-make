@@ -67,13 +67,13 @@ export function Sidebar() {
         <aside
             ref={sidebarRef}
             style={{width: `${width}px`, minWidth: `${width}px`}}
-            className="h-screen flex flex-col border-r border-[#e5e5e5] bg-white relative"
+            className="h-screen flex flex-col border-r border-border bg-white relative"
         >
             {/* Header */}
-            <div className="px-5 py-4 border-b border-[#f0f0f0]">
+            <div className="px-5 py-4 border-b border-border-header">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-[#111] rounded-md flex items-center justify-center">
+                        <div className="w-6 h-6 bg-primary rounded-md flex items-center justify-center">
                             <svg
                                 width="14"
                                 height="14"
@@ -108,19 +108,19 @@ export function Sidebar() {
                                 />
                             </svg>
                         </div>
-                        <span className="text-[15px] font-bold text-[#111] tracking-tight">
+                        <span className="text-[15px] font-bold text-primary tracking-tight">
                             CV Make
                         </span>
                     </div>
                     <div className="flex items-center gap-2.5">
-                        <span className="text-[10px] text-[#999] bg-[#f5f5f5] px-1.5 py-0.5 rounded">
+                        <span className="text-[10px] text-text-tertiary bg-surface-muted px-1.5 py-0.5 rounded">
                             v{appVersion}
                         </span>
                         <a
                             href="https://github.com/misbiheyv/cv-make"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-[#666] hover:text-[#111] transition-colors"
+                            className="text-text-secondary hover:text-primary transition-colors"
                             aria-label="GitHub repository"
                         >
                             <svg
