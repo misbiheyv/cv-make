@@ -54,10 +54,10 @@ export default function LandingPage() {
         <div className="min-h-screen flex flex-col">
             {/* Hero */}
             <section className="flex-1 flex flex-col items-center justify-center text-center px-6 py-20">
-                <h1 className="text-4xl sm:text-5xl font-bold text-[#111] tracking-tight max-w-2xl">
+                <h1 className="text-4xl sm:text-5xl font-bold text-primary tracking-tight max-w-2xl">
                     Create Your Professional Resume in Minutes
                 </h1>
-                <p className="mt-4 text-lg text-[#666] max-w-xl">
+                <p className="mt-4 text-lg text-text-secondary max-w-xl">
                     Free online resume builder with real-time preview and PDF export. No sign-up
                     required.
                 </p>
@@ -70,18 +70,18 @@ export default function LandingPage() {
 
             {/* Features */}
             <section className="px-6 py-16 bg-white">
-                <h2 className="text-2xl font-bold text-[#111] text-center mb-10">
+                <h2 className="text-2xl font-bold text-primary text-center mb-10">
                     Everything You Need
                 </h2>
                 <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {features.map((feature) => (
                         <div
                             key={feature.title}
-                            className="bg-[#fafafa] rounded-[10px] border border-[#e5e5e5] p-5"
+                            className="bg-surface rounded-[10px] border border-border p-5"
                         >
-                            <feature.icon className="w-6 h-6 text-[#111] mb-3" />
-                            <h3 className="font-semibold text-[#111] mb-1">{feature.title}</h3>
-                            <p className="text-sm text-[#666]">{feature.description}</p>
+                            <feature.icon className="w-6 h-6 text-primary mb-3" />
+                            <h3 className="font-semibold text-primary mb-1">{feature.title}</h3>
+                            <p className="text-sm text-text-secondary">{feature.description}</p>
                         </div>
                     ))}
                 </div>
@@ -89,15 +89,15 @@ export default function LandingPage() {
 
             {/* How It Works */}
             <section className="px-6 py-16">
-                <h2 className="text-2xl font-bold text-[#111] text-center mb-10">How It Works</h2>
+                <h2 className="text-2xl font-bold text-primary text-center mb-10">How It Works</h2>
                 <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
                     {steps.map((step) => (
                         <div key={step.number}>
-                            <div className="w-10 h-10 rounded-full bg-[#111] text-white flex items-center justify-center text-lg font-bold mx-auto mb-3">
+                            <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center text-lg font-bold mx-auto mb-3">
                                 {step.number}
                             </div>
-                            <h3 className="font-semibold text-[#111] mb-1">{step.title}</h3>
-                            <p className="text-sm text-[#666]">{step.description}</p>
+                            <h3 className="font-semibold text-primary mb-1">{step.title}</h3>
+                            <p className="text-sm text-text-secondary">{step.description}</p>
                         </div>
                     ))}
                 </div>
@@ -106,8 +106,8 @@ export default function LandingPage() {
             {/* For Developers */}
             <section className="px-6 py-16 bg-white">
                 <div className="max-w-2xl mx-auto text-center">
-                    <h2 className="text-2xl font-bold text-[#111] mb-4">Built for Developers</h2>
-                    <p className="text-[#666]">
+                    <h2 className="text-2xl font-bold text-primary mb-4">Built for Developers</h2>
+                    <p className="text-text-secondary">
                         Clean formatting and ATS-friendly output designed for tech professionals.
                         Highlight your skills, projects, and experience with a resume that gets past
                         automated screening systems. Open source on{" "}
@@ -115,7 +115,7 @@ export default function LandingPage() {
                             href="https://github.com/misbiheyv/cv-make"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-[#111] underline hover:text-[#333]"
+                            className="text-primary underline hover:text-primary-hover"
                         >
                             GitHub
                         </a>
@@ -125,14 +125,14 @@ export default function LandingPage() {
             </section>
 
             {/* Footer */}
-            <footer className="px-6 py-8 border-t border-[#e5e5e5] text-center text-sm text-[#999]">
+            <footer className="px-6 py-8 border-t border-border text-center text-sm text-text-tertiary">
                 <p>
                     &copy; {new Date().getFullYear()} CV Make &middot;{" "}
                     <a
                         href="https://github.com/misbiheyv/cv-make"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-[#666] transition-colors"
+                        className="hover:text-text-secondary transition-colors"
                     >
                         GitHub
                     </a>

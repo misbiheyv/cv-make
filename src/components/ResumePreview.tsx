@@ -26,7 +26,7 @@ export const ResumePreview = memo(function ResumePreview() {
     if (!isHydrated) {
         return (
             <div className="min-h-full p-6 flex justify-center items-center" style={dotGridBg}>
-                <div className="text-[#888]">Loading...</div>
+                <div className="text-text-label">Loading...</div>
             </div>
         );
     }

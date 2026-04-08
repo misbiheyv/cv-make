@@ -1,6 +1,6 @@
 "use client";
 
-import {AddButton, ReorderableSectionsList} from "@/components/ui";
+import {AddButton, EmptyState, ReorderableSectionsList} from "@/components/ui";
 import {useResumeStore} from "@/store/useResumeStore";
 
 export function EducationForm() {
@@ -14,7 +14,7 @@ export function EducationForm() {
                 onMove={(id, dir) => moveEducation(id, dir)}
                 onRemove={(id) => removeEducation(id)}
                 renderTitle={(_edu, index) => (
-                    <span className="text-gray-400">Education #{index + 1}</span>
+                    <span className="text-text-tertiary">Education #{index + 1}</span>
                 )}
                 renderContent={(edu) => (
                     <div className="space-y-3">
@@ -94,6 +94,8 @@ export function EducationForm() {
             />
 
             <AddButton onClick={addEducation}>Add Education</AddButton>
+
+            <EmptyState show={education.length === 0}>No educations added yet</EmptyState>
         </div>
     );
 }

@@ -21,8 +21,8 @@ export function SectionTabs({tabs, activeTab, onTabChange}: SectionTabsProps) {
                     onClick={() => onTabChange(tab.id)}
                     className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors duration-150 ${
                         activeTab === tab.id
-                            ? "bg-[#111] text-white"
-                            : "bg-[#f5f5f5] text-[#666] hover:bg-[#eee] hover:text-[#444]"
+                            ? "bg-primary text-white"
+                            : "bg-surface-muted text-text-secondary hover:bg-surface-hover hover:text-primary-hover"
                     }`}
                 >
                     {tab.label}

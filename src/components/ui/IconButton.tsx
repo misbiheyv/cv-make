@@ -15,9 +15,9 @@ interface IconButtonProps {
 }
 
 export const variantStyles: Record<IconButtonVariant, string> = {
-    danger: "text-[#ddd] hover:text-[#ef4444]",
-    ghost: "text-[#ccc] hover:text-[#666]",
-    primary: "text-[#888] hover:text-[#111]",
+    danger: "text-icon-muted hover:text-danger",
+    ghost: "text-icon-default hover:text-icon-hover",
+    primary: "text-icon-default hover:text-primary",
 };
 
 export function IconButton({

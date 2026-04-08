@@ -27,7 +27,7 @@ export function MoveButtons({
                 type="button"
                 onClick={onMoveUp}
                 disabled={isFirst}
-                className="text-[#ccc] hover:text-[#666] p-0.5 transition-colors duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
+                className="text-icon-default hover:text-icon-hover p-0.5 transition-colors duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
                 title="Move up"
             >
                 <ChevronUp className={iconSize} />
@@ -36,7 +36,7 @@ export function MoveButtons({
                 type="button"
                 onClick={onMoveDown}
                 disabled={isLast}
-                className="text-[#ccc] hover:text-[#666] p-0.5 transition-colors duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
+                className="text-icon-default hover:text-icon-hover p-0.5 transition-colors duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
                 title="Move down"
             >
                 <ChevronDown className={iconSize} />
