@@ -14,9 +14,6 @@
       "suspicious": {
         "noArrayIndexKey": "off",
         "useIterableCallbackReturn": "off"
-      },
-      "security": {
-        "noDangerouslySetInnerHtml": "off"
       }
     }
   },

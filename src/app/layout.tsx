@@ -46,27 +46,24 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     return (
         <html lang="en">
             <body className="antialiased">
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{
-                        __html: JSON.stringify({
-                            "@context": "https://schema.org",
-                            "@type": "WebApplication",
-                            name: "CV Make",
-                            url: "https://cv-make.com",
-                            description:
-                                "Free online resume builder with real-time preview and PDF export",
-                            applicationCategory: "BusinessApplication",
-                            operatingSystem: "Any",
-                            offers: {
-                                "@type": "Offer",
-                                price: "0",
-                                priceCurrency: "USD",
-                            },
-                            browserRequirements: "Requires a modern web browser",
-                        }),
-                    }}
-                />
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "WebApplication",
+                        name: "CV Make",
+                        url: "https://cv-make.com",
+                        description:
+                            "Free online resume builder with real-time preview and PDF export",
+                        applicationCategory: "BusinessApplication",
+                        operatingSystem: "Any",
+                        offers: {
+                            "@type": "Offer",
+                            price: "0",
+                            priceCurrency: "USD",
+                        },
+                        browserRequirements: "Requires a modern web browser",
+                    })}
+                </script>
                 {children}
                 <Toaster position="top-right" richColors />
             </body>
